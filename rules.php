@@ -16,9 +16,9 @@ include 'includes/header.php';
     
     <h2 style="color: var(--color-primary); margin-bottom: 15px; font-size: 24px;">1. Sistem Pertandingan</h2>
     <ul style="color: var(--color-text-main); margin-bottom: 30px; padding-left: 20px; line-height: 1.8;">
-      <li>Pertandingan menggunakan sistem poin reli (rally point scoring). Setiap kesalahan akan membuahkan poin bagi lawan.</li>
+      <li>Pertandingan menggunakan sistem skor tradisional (side-out). Poin hanya bisa didapat oleh pemain yang sedang melakukan servis.</li>
       <li>Setiap pertandingan (match) terdiri dari 1 game. Pemenang adalah yang lebih dulu mencapai 11 poin.</li>
-      <li>Jika terjadi skor seri 10-10 (deuce), permainan dilanjutkan hingga salah satu pemain unggul selisih 2 poin (misal 12-10).</li>
+      <li>Tidak ada aturan selisih 2 poin (no deuce). Pemain yang pertama kali menyentuh angka 11 dinyatakan sebagai pemenang (Sudden Death 11).</li>
     </ul>
 
     <h2 style="color: var(--color-primary); margin-bottom: 15px; font-size: 24px;">2. Aturan Servis</h2>

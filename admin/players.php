@@ -28,18 +28,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
     $stmt->execute([$name, $photoName]);
     header('Location: players'); exit;
 }
+$error = '';
 if (isset($_GET['delete'])) {
-    $stmt = $pdo->prepare("SELECT photo FROM players WHERE id=?");
-    $stmt->execute([(int)$_GET['delete']]);
-    $p = $stmt->fetch();
-    if ($p && $p['photo']) {
-        $photoPath = '../assets/uploads/players/' . $p['photo'];
-        if (file_exists($photoPath)) unlink($photoPath);
-    }
+    $id = (int)$_GET['delete'];
+    
+    // Check if player has any matches
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM matches WHERE player1_id = ? OR player2_id = ?");
+    $stmt->execute([$id, $id]);
+    if ($stmt->fetchColumn() > 0) {
+        $error = 'Pemain tidak bisa dihapus dari Master List karena sudah memiliki riwayat pertandingan.';
+    } else {
+        $stmt = $pdo->prepare("SELECT photo FROM players WHERE id=?");
+        $stmt->execute([$id]);
+        $p = $stmt->fetch();
+        if ($p && $p['photo']) {
+            $photoPath = '../assets/uploads/players/' . $p['photo'];
+            if (file_exists($photoPath)) unlink($photoPath);
+        }
 
-    $stmt = $pdo->prepare("DELETE FROM players WHERE id=?");
-    $stmt->execute([(int)$_GET['delete']]);
-    header('Location: players'); exit;
+        $stmt = $pdo->prepare("DELETE FROM players WHERE id=?");
+        $stmt->execute([$id]);
+        header('Location: players'); exit;
+    }
 }
 $players = $pdo->query("SELECT * FROM players ORDER BY name ASC")->fetchAll();
 
@@ -53,6 +63,10 @@ include 'includes/header.php';
     <p style="color: var(--color-text-muted); margin-top: 5px;">Tambah dan hapus daftar pemain liga.</p>
   </div>
 </div>
+
+<?php if($error): ?>
+  <div class="alert" style="background: #ef4444; color: white; margin-bottom: 24px;"><?= e($error) ?></div>
+<?php endif; ?>
 
 <div class="admin-card">
   <form method="post" enctype="multipart/form-data" style="max-width: 400px;">

@@ -51,7 +51,7 @@ if ($activeSeason) {
     <h2>1. Kelola Pemain & Musim</h2>
     <p style="color: var(--color-text-muted); margin-bottom: 15px;">Daftarkan pemain baru dan buat musim kompetisi.</p>
     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-      <a href="players" class="btn btn-outline">Kelola Pemain</a>
+      <a href="players" class="btn btn-outline">Master Pemain</a>
       <a href="seasons" class="btn btn-outline">Buat Musim Baru</a>
     </div>
   </div>
@@ -60,7 +60,7 @@ if ($activeSeason) {
     <h2>2. Persiapan Jadwal</h2>
     <p style="color: var(--color-text-muted); margin-bottom: 15px;">Masukkan pemain ke dalam musim aktif, lalu generate jadwal pertandingan.</p>
     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-      <a href="season_players" class="btn btn-outline">Daftar Pemain Musim</a>
+      <a href="season_players" class="btn btn-outline">Pemain Musim Ini</a>
       <a href="generate" class="btn btn-outline">Generate Jadwal</a>
     </div>
   </div>

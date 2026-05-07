@@ -125,4 +125,78 @@ function generateRoundRobin($playerIds, $leagueType = 'half') {
 
     return $schedule;
 }
+function syncSeasonMatches($pdo, $seasonId) {
+    // Get season info
+    $stmt = $pdo->prepare("SELECT * FROM seasons WHERE id = ?");
+    $stmt->execute([$seasonId]);
+    $season = $stmt->fetch();
+    if (!$season) return;
+
+    // Get all current players in season
+    $stmt = $pdo->prepare("SELECT player_id FROM season_players WHERE season_id = ?");
+    $stmt->execute([$seasonId]);
+    $players = array_column($stmt->fetchAll(), 'player_id');
+    if (count($players) < 2) return;
+
+    // Get current matches to avoid duplicates
+    $stmt = $pdo->prepare("SELECT player1_id, player2_id, leg_number FROM matches WHERE season_id = ?");
+    $stmt->execute([$seasonId]);
+    $existing = $stmt->fetchAll();
+    
+    $existingPairs = [];
+    foreach ($existing as $m) {
+        $key = $m['player1_id'] . '-' . $m['player2_id'] . '-' . $m['leg_number'];
+        $existingPairs[$key] = true;
+    }
+
+    // Find max round number to append new matches
+    $stmt = $pdo->prepare("SELECT MAX(round_number) FROM matches WHERE season_id = ?");
+    $stmt->execute([$seasonId]);
+    $maxRound = (int)$stmt->fetchColumn();
+    $newRound = $maxRound + 1;
+
+    // Generate missing matches
+    $newMatchesCount = 0;
+    foreach ($players as $p1) {
+        foreach ($players as $p2) {
+            if ($p1 == $p2) continue;
+
+            // Half league: only one match per pair (canonical order)
+            if ($season['league_type'] === 'half') {
+                $ids = [$p1, $p2];
+                sort($ids);
+                $key = $ids[0] . '-' . $ids[1] . '-1';
+                if (!isset($existingPairs[$key])) {
+                    $stmt = $pdo->prepare("INSERT INTO matches (season_id, round_number, leg_number, player1_id, player2_id) VALUES (?, ?, ?, ?, ?)");
+                    $stmt->execute([$seasonId, $newRound, 1, $ids[0], $ids[1]]);
+                    $existingPairs[$key] = true;
+                    $newMatchesCount++;
+                }
+            } 
+            // Full league: home and away
+            else {
+                // Check Leg 1 (p1 vs p2)
+                $key1 = $p1 . '-' . $p2 . '-1';
+                $key1_rev = $p2 . '-' . $p1 . '-1';
+                if (!isset($existingPairs[$key1]) && !isset($existingPairs[$key1_rev])) {
+                    $stmt = $pdo->prepare("INSERT INTO matches (season_id, round_number, leg_number, player1_id, player2_id) VALUES (?, ?, ?, ?, ?)");
+                    $stmt->execute([$seasonId, $newRound, 1, $p1, $p2]);
+                    $existingPairs[$key1] = true;
+                    $newMatchesCount++;
+                }
+
+                // Check Leg 2 (p2 vs p1)
+                $key2 = $p2 . '-' . $p1 . '-2';
+                $key2_rev = $p1 . '-' . $p2 . '-2';
+                if (!isset($existingPairs[$key2]) && !isset($existingPairs[$key2_rev])) {
+                    $stmt = $pdo->prepare("INSERT INTO matches (season_id, round_number, leg_number, player1_id, player2_id) VALUES (?, ?, ?, ?, ?)");
+                    $stmt->execute([$seasonId, $newRound, 2, $p2, $p1]);
+                    $existingPairs[$key2] = true;
+                    $newMatchesCount++;
+                }
+            }
+        }
+    }
+    return $newMatchesCount;
+}
 ?>

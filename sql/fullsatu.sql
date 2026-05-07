@@ -218,30 +218,31 @@ CREATE TABLE IF NOT EXISTS `players` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `photo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table fullsatu_league.players: ~19 rows (approximately)
-REPLACE INTO `players` (`id`, `name`, `created_at`) VALUES
-	(1, 'Opick', '2026-05-07 07:21:54'),
-	(2, 'Ade', '2026-05-07 07:21:54'),
-	(3, 'Ahmad', '2026-05-07 07:21:54'),
-	(4, 'Alam', '2026-05-07 07:21:54'),
-	(5, 'Anto', '2026-05-07 07:21:54'),
-	(6, 'Appank', '2026-05-07 07:21:54'),
-	(7, 'Badu', '2026-05-07 07:21:54'),
-	(8, 'Bakri', '2026-05-07 07:21:54'),
-	(9, 'Brewok', '2026-05-07 07:21:54'),
-	(10, 'Erwin', '2026-05-07 07:21:54'),
-	(11, 'Fahyu', '2026-05-07 07:21:54'),
-	(12, 'Farid', '2026-05-07 07:21:54'),
-	(13, 'Ilham', '2026-05-07 07:21:54'),
-	(14, 'Irfan', '2026-05-07 07:21:54'),
-	(15, 'Nursam', '2026-05-07 07:21:54'),
-	(16, 'Padi', '2026-05-07 07:21:54'),
-	(17, 'Rafli', '2026-05-07 07:21:54'),
-	(18, 'Accank', '2026-05-07 07:21:54'),
-	(19, 'Harfan', '2026-05-07 07:21:54');
+REPLACE INTO `players` (`id`, `name`, `created_at`, `photo`) VALUES
+	(1, 'Opick', '2026-05-07 07:21:54', NULL),
+	(2, 'Ade', '2026-05-07 07:21:54', NULL),
+	(3, 'Ahmad', '2026-05-07 07:21:54', NULL),
+	(4, 'Alam', '2026-05-07 07:21:54', NULL),
+	(5, 'Anto', '2026-05-07 07:21:54', NULL),
+	(6, 'Appank', '2026-05-07 07:21:54', NULL),
+	(7, 'Badu', '2026-05-07 07:21:54', NULL),
+	(8, 'Bakri', '2026-05-07 07:21:54', NULL),
+	(9, 'Brewok', '2026-05-07 07:21:54', NULL),
+	(10, 'Erwin', '2026-05-07 07:21:54', NULL),
+	(11, 'Fahyu', '2026-05-07 07:21:54', NULL),
+	(12, 'Farid', '2026-05-07 07:21:54', NULL),
+	(13, 'Ilham', '2026-05-07 07:21:54', NULL),
+	(14, 'Ippank', '2026-05-07 07:21:54', '9b6ae9df4ea8df5bd96fa9819c5cf337.png'),
+	(15, 'Nursam', '2026-05-07 07:21:54', NULL),
+	(16, 'Padi', '2026-05-07 07:21:54', NULL),
+	(17, 'Rafli', '2026-05-07 07:21:54', NULL),
+	(18, 'Accank', '2026-05-07 07:21:54', NULL),
+	(19, 'Harfan', '2026-05-07 07:21:54', NULL);
 
 -- Dumping structure for table fullsatu_league.seasons
 CREATE TABLE IF NOT EXISTS `seasons` (
