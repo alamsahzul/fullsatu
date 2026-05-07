@@ -29,13 +29,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$stmt = $pdo->prepare("SELECT m.*, p1.name AS player1, p2.name AS player2 
-                       FROM matches m 
-                       JOIN players p1 ON p1.id=m.player1_id 
-                       JOIN players p2 ON p2.id=m.player2_id 
-                       WHERE m.season_id=? 
-                       ORDER BY m.round_number, m.id");
-$stmt->execute([$season['id']]);
+$search = isset($_GET['q']) ? trim($_GET['q']) : '';
+$search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
+
+$sql = "SELECT m.*, p1.name AS player1, p2.name AS player2 
+        FROM matches m 
+        JOIN players p1 ON p1.id=m.player1_id 
+        JOIN players p2 ON p2.id=m.player2_id 
+        WHERE m.season_id=?";
+$params = [$season['id']];
+
+if ($search && $search2) {
+    $sql .= " AND (
+        (p1.name LIKE ? AND p2.name LIKE ?) 
+        OR 
+        (p1.name LIKE ? AND p2.name LIKE ?)
+    ) ";
+    $params[] = '%' . $search . '%';
+    $params[] = '%' . $search2 . '%';
+    $params[] = '%' . $search2 . '%';
+    $params[] = '%' . $search . '%';
+} elseif ($search) {
+    $sql .= " AND (p1.name LIKE ? OR p2.name LIKE ?) ";
+    $params[] = '%' . $search . '%';
+    $params[] = '%' . $search . '%';
+}
+
+$sql .= " ORDER BY m.round_number, m.id";
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
 $matches = $stmt->fetchAll();
 
 $pageTitle = 'Input Skor - Admin';
@@ -45,7 +67,7 @@ include 'includes/header.php';
 <div class="admin-header">
   <div>
     <h1>Input Skor Pertandingan</h1>
-    <p style="color: var(--color-text-muted); margin-top: 5px;">Satu pertandingan terdiri dari 1 game (hingga 11 poin). Pemenang harus selisih 2 poin jika terjadi deuce.</p>
+    <p style="color: var(--color-text-muted); margin-top: 5px;">Satu pertandingan terdiri dari 1 game. Pemenang adalah yang pertama kali mencapai skor 11.</p>
   </div>
 </div>
 
@@ -60,22 +82,34 @@ include 'includes/header.php';
 <?php endif; ?>
 
 <div class="admin-card">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+    <h2 style="margin: 0; font-size: 20px;">Daftar Pertandingan</h2>
+    <form method="get" style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <input type="text" name="q" value="<?= e($search) ?>" placeholder="Pemain 1..." style="width: 150px; background: var(--color-bg-dark); border: 1px solid var(--color-border); color: white; padding: 8px 15px; border-radius: 8px; font-size: 14px;">
+      <div style="align-self: center; color: var(--color-text-muted);">vs</div>
+      <input type="text" name="q2" value="<?= e($search2) ?>" placeholder="Pemain 2..." style="width: 150px; background: var(--color-bg-dark); border: 1px solid var(--color-border); color: white; padding: 8px 15px; border-radius: 8px; font-size: 14px;">
+      <button class="btn btn-primary" style="padding: 8px 15px; font-size: 14px;">Cari Match</button>
+      <?php if($search || $search2): ?>
+        <a href="matches" class="btn btn-outline" style="padding: 8px 15px; font-size: 14px;">Reset</a>
+      <?php endif; ?>
+    </form>
+  </div>
   <div class="table-wrap">
     <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
       <thead>
         <tr>
-          <th style="text-align: left; padding: 12px; border-bottom: 1px solid var(--color-border); color: var(--color-text-muted);">Jadwal (Round/Leg)</th>
+          <th style="text-align: left; padding: 12px; border-bottom: 1px solid var(--color-border); color: var(--color-text-muted);">#</th>
           <th style="text-align: left; padding: 12px; border-bottom: 1px solid var(--color-border); color: var(--color-text-muted);">Pemain</th>
           <th style="text-align: center; padding: 12px; border-bottom: 1px solid var(--color-border); color: var(--color-text-muted);">Status/Skor</th>
           <th style="text-align: right; padding: 12px; border-bottom: 1px solid var(--color-border); color: var(--color-text-muted);">Input Skor</th>
         </tr>
       </thead>
       <tbody>
-        <?php foreach($matches as $m): ?>
+        <?php foreach($matches as $i => $m): ?>
         <tr>
           <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05);">
             <span style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-family: monospace;">
-              R<?= e($m['round_number']) ?> / L<?= e($m['leg_number']) ?>
+              <?= $i + 1 ?>
             </span>
           </td>
           <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05);">

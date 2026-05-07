@@ -44,20 +44,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['players'])) {
     }
 }
 
+$search = isset($_GET['q']) ? trim($_GET['q']) : '';
+
 // Get current participants
 $stmt = $pdo->prepare("SELECT p.* FROM season_players sp JOIN players p ON p.id = sp.player_id WHERE sp.season_id=? ORDER BY p.name ASC");
 $stmt->execute([$season['id']]);
 $activePlayers = $stmt->fetchAll();
 
-// Get available players (not in this season)
+// Get available players (not in this season, filtered by search)
 $activeIds = array_column($activePlayers, 'id');
+$sql = "SELECT * FROM players WHERE 1=1 ";
+$params = [];
 if (count($activeIds) > 0) {
     $placeholders = implode(',', array_fill(0, count($activeIds), '?'));
-    $stmt = $pdo->prepare("SELECT * FROM players WHERE id NOT IN ($placeholders) ORDER BY name ASC");
-    $stmt->execute($activeIds);
-} else {
-    $stmt = $pdo->query("SELECT * FROM players ORDER BY name ASC");
+    $sql .= " AND id NOT IN ($placeholders) ";
+    $params = $activeIds;
 }
+if ($search) {
+    $sql .= " AND name LIKE ? ";
+    $params[] = '%' . $search . '%';
+}
+$sql .= " ORDER BY name ASC";
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
 $availablePlayers = $stmt->fetchAll();
 
 $pageTitle = 'Manajemen Pemain Musim';
@@ -125,7 +134,16 @@ include 'includes/header.php';
 
 <!-- TAMBAH PESERTA SECTION -->
 <div class="admin-card" style="margin-top: 40px;">
-  <h2 style="margin-bottom: 20px; font-size: 20px;">Tambah Peserta Baru</h2>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+    <h2 style="margin: 0; font-size: 20px;">Tambah Peserta Baru</h2>
+    <form method="get" style="display: flex; gap: 10px;">
+      <input type="text" name="q" value="<?= e($search) ?>" placeholder="Cari nama pemain..." style="background: var(--color-bg-dark); border: 1px solid var(--color-border); color: white; padding: 8px 15px; border-radius: 8px; font-size: 14px;">
+      <button class="btn btn-primary" style="padding: 8px 15px; font-size: 14px;">Cari</button>
+      <?php if($search): ?>
+        <a href="season_players" class="btn btn-outline" style="padding: 8px 15px; font-size: 14px;">Reset</a>
+      <?php endif; ?>
+    </form>
+  </div>
   <form method="post">
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
       <?php foreach($availablePlayers as $p): ?>

@@ -51,7 +51,14 @@ if (isset($_GET['delete'])) {
         header('Location: players'); exit;
     }
 }
-$players = $pdo->query("SELECT * FROM players ORDER BY name ASC")->fetchAll();
+$search = isset($_GET['q']) ? trim($_GET['q']) : '';
+if ($search) {
+    $stmt = $pdo->prepare("SELECT * FROM players WHERE name LIKE ? ORDER BY name ASC");
+    $stmt->execute(['%' . $search . '%']);
+    $players = $stmt->fetchAll();
+} else {
+    $players = $pdo->query("SELECT * FROM players ORDER BY name ASC")->fetchAll();
+}
 
 $pageTitle = 'Admin Pemain';
 include 'includes/header.php';
@@ -85,6 +92,16 @@ include 'includes/header.php';
 </div>
 
 <div class="admin-card">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+    <h2 style="margin: 0; font-size: 20px;">Daftar Pemain</h2>
+    <form method="get" style="display: flex; gap: 10px;">
+      <input type="text" name="q" value="<?= e($search) ?>" placeholder="Cari nama..." style="background: var(--color-bg-dark); border: 1px solid var(--color-border); color: white; padding: 8px 15px; border-radius: 8px; font-size: 14px;">
+      <button class="btn btn-primary" style="padding: 8px 15px; font-size: 14px;">Cari</button>
+      <?php if($search): ?>
+        <a href="players" class="btn btn-outline" style="padding: 8px 15px; font-size: 14px;">Reset</a>
+      <?php endif; ?>
+    </form>
+  </div>
   <div class="table-wrap">
     <table style="width: 100%; border-collapse: collapse;">
       <thead>
