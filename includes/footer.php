@@ -15,6 +15,7 @@
     </div>
     <div class="footer-copyright">
       &copy; 2026 FullSatu Single Man League. All rights reserved.
+      <br><a href="<?= base_url('admin/index.php') ?>" style="display:inline-block; margin-top:10px; color:var(--color-primary); font-size:12px;">Go to Admin Panel</a>
     </div>
   </div>
 </footer>
