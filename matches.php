@@ -55,7 +55,8 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
       $params[] = "%$search%";
   }
   
-  $sql .= " ORDER BY m.round_number ASC, m.id ASC";
+  // Show 'completed' matches first, then 'scheduled'
+  $sql .= " ORDER BY CASE WHEN m.status = 'completed' THEN 0 ELSE 1 END, m.round_number ASC, m.id ASC";
   $stmt = $pdo->prepare($sql);
   $stmt->execute($params);
   $matches = $stmt->fetchAll();
@@ -66,8 +67,7 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
       <thead>
         <tr>
           <th style="width: 60px;">#</th>
-          <th>Pertandingan</th>
-          <th class="num">Skor</th>
+          <th>Pertandingan & Hasil</th>
           <th style="text-align: center;">Status</th>
         </tr>
       </thead>
@@ -78,34 +78,41 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
             <div style="font-size: 14px; font-weight: 700; color: var(--color-primary);"><?= $i + 1 ?></div>
           </td>
           <td>
-            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-              <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 120px; justify-content: flex-end;">
-                <span style="<?= $m['winner_id'] == $m['player1_id'] ? 'color: var(--color-primary); font-weight: 700;' : '' ?>"><?= e($m['player1']) ?></span>
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; padding: 10px 0;">
+              
+              <!-- Player 1 -->
+              <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 150px; justify-content: flex-end;">
+                <div style="text-align: right;">
+                   <div style="<?= $m['winner_id'] == $m['player1_id'] ? 'color: var(--color-primary); font-weight: 700;' : 'color: white;' ?>"><?= e($m['player1']) ?></div>
+                   <?php if($m['status'] === 'completed'): ?>
+                     <div style="font-size: 24px; font-weight: 900; color: var(--color-primary);"><?= e($m['player1_score']) ?></div>
+                   <?php endif; ?>
+                </div>
                 <?php if($m['photo1']): ?>
-                  <img src="<?= base_url('assets/uploads/players/'.$m['photo1']) ?>" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
+                  <img src="<?= base_url('assets/uploads/players/'.$m['photo1']) ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'transparent' ?>;">
                 <?php else: ?>
-                  <img src="<?= base_url('assets/img/player_avatar.png') ?>" style="width: 24px; height: 24px; border-radius: 50%; opacity: 0.3;">
+                  <img src="<?= base_url('assets/img/player_avatar.png') ?>" style="width: 45px; height: 45px; border-radius: 50%; opacity: 0.3;">
                 <?php endif; ?>
               </div>
               
-              <div style="color: var(--color-text-muted); font-size: 12px; font-weight: 900;">VS</div>
+              <div style="color: var(--color-text-muted); font-size: 14px; font-weight: 900; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 8px;">VS</div>
               
-              <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 120px;">
+              <!-- Player 2 -->
+              <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 150px; justify-content: flex-start;">
                 <?php if($m['photo2']): ?>
-                  <img src="<?= base_url('assets/uploads/players/'.$m['photo2']) ?>" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
+                  <img src="<?= base_url('assets/uploads/players/'.$m['photo2']) ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'transparent' ?>;">
                 <?php else: ?>
-                  <img src="<?= base_url('assets/img/player_avatar.png') ?>" style="width: 24px; height: 24px; border-radius: 50%; opacity: 0.3;">
+                  <img src="<?= base_url('assets/img/player_avatar.png') ?>" style="width: 45px; height: 45px; border-radius: 50%; opacity: 0.3;">
                 <?php endif; ?>
-                <span style="<?= $m['winner_id'] == $m['player2_id'] ? 'color: var(--color-primary); font-weight: 700;' : '' ?>"><?= e($m['player2']) ?></span>
+                <div style="text-align: left;">
+                   <div style="<?= $m['winner_id'] == $m['player2_id'] ? 'color: var(--color-primary); font-weight: 700;' : 'color: white;' ?>"><?= e($m['player2']) ?></div>
+                   <?php if($m['status'] === 'completed'): ?>
+                     <div style="font-size: 24px; font-weight: 900; color: var(--color-primary);"><?= e($m['player2_score']) ?></div>
+                   <?php endif; ?>
+                </div>
               </div>
+
             </div>
-          </td>
-          <td class="num">
-            <?php if($m['status'] === 'completed'): ?>
-              <strong style="font-size: 18px; color: white;"><?= e($m['player1_score']) ?> - <?= e($m['player2_score']) ?></strong>
-            <?php else: ?>
-              <span style="color: var(--color-text-muted);">-</span>
-            <?php endif; ?>
           </td>
           <td style="text-align: center;">
             <span class="badge" style="background: <?= $m['status'] === 'completed' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(255,255,255,0.05)' ?>; color: <?= $m['status'] === 'completed' ? '#22c55e' : 'var(--color-text-muted)' ?>; border: 1px solid <?= $m['status'] === 'completed' ? 'rgba(34, 197, 94, 0.2)' : 'var(--color-border)' ?>;">
