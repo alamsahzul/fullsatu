@@ -1,16 +1,17 @@
 <?php
+require 'includes/auth.php';
 require '../config/db.php';
 require '../includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
     $stmt = $pdo->prepare("INSERT INTO players (name) VALUES (?)");
     $stmt->execute([trim($_POST['name'])]);
-    header('Location: players.php'); exit;
+    header('Location: players'); exit;
 }
 if (isset($_GET['delete'])) {
     $stmt = $pdo->prepare("DELETE FROM players WHERE id=?");
     $stmt->execute([(int)$_GET['delete']]);
-    header('Location: players.php'); exit;
+    header('Location: players'); exit;
 }
 $players = $pdo->query("SELECT * FROM players ORDER BY name ASC")->fetchAll();
 

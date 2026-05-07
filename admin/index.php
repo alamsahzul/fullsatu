@@ -1,4 +1,5 @@
 <?php
+require 'includes/auth.php';
 require '../config/db.php';
 require '../includes/functions.php';
 
@@ -50,8 +51,8 @@ if ($activeSeason) {
     <h2>1. Kelola Pemain & Musim</h2>
     <p style="color: var(--color-text-muted); margin-bottom: 15px;">Daftarkan pemain baru dan buat musim kompetisi.</p>
     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-      <a href="players.php" class="btn btn-outline">Kelola Pemain</a>
-      <a href="seasons.php" class="btn btn-outline">Buat Musim Baru</a>
+      <a href="players" class="btn btn-outline">Kelola Pemain</a>
+      <a href="seasons" class="btn btn-outline">Buat Musim Baru</a>
     </div>
   </div>
 
@@ -59,15 +60,15 @@ if ($activeSeason) {
     <h2>2. Persiapan Jadwal</h2>
     <p style="color: var(--color-text-muted); margin-bottom: 15px;">Masukkan pemain ke dalam musim aktif, lalu generate jadwal pertandingan.</p>
     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-      <a href="season_players.php" class="btn btn-outline">Daftar Pemain Musim</a>
-      <a href="generate.php" class="btn btn-outline">Generate Jadwal</a>
+      <a href="season_players" class="btn btn-outline">Daftar Pemain Musim</a>
+      <a href="generate" class="btn btn-outline">Generate Jadwal</a>
     </div>
   </div>
 
   <div class="admin-card">
     <h2>3. Input Skor</h2>
     <p style="color: var(--color-text-muted); margin-bottom: 15px;">Catat hasil pertandingan. Klasemen akan otomatis diperbarui.</p>
-    <a href="matches.php" class="btn btn-primary">Input Skor Pertandingan</a>
+    <a href="matches" class="btn btn-primary">Input Skor Pertandingan</a>
   </div>
 </div>
 

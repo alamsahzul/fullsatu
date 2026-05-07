@@ -1,10 +1,11 @@
 <?php
+require 'includes/auth.php';
 require '../config/db.php';
 require '../includes/functions.php';
 
 $season = getCurrentSeason($pdo);
 if (!$season) {
-    header('Location: index.php'); exit;
+    header('Location: index'); exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -21,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("INSERT INTO matches (season_id, round_number, leg_number, player1_id, player2_id) VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([$season['id'], $m['round_number'], $m['leg_number'], $m['player1_id'], $m['player2_id']]);
         }
-        header('Location: matches.php?generated=1'); exit;
+        header('Location: matches?generated=1'); exit;
     }
 }
 

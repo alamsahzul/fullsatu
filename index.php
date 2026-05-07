@@ -20,8 +20,8 @@ if ($season) {
     <h2>SINGLE MAN LEAGUE</h2>
     <p>Liga pickleball single player pertama yang mengutamakan sportivitas, persaingan sehat, dan keseruan di setiap match.</p>
     <div class="hero-buttons">
-      <a href="<?= base_url('standings.php') ?>" class="btn btn-primary"><span class="icon-trophy">🏆</span> LIHAT KLASEMEN</a>
-      <a href="<?= base_url('matches.php') ?>" class="btn btn-outline"><span class="icon-calendar">📅</span> JADWAL MATCH</a>
+      <a href="<?= base_url('standings') ?>" class="btn btn-primary"><span class="icon-trophy">🏆</span> LIHAT KLASEMEN</a>
+      <a href="<?= base_url('matches') ?>" class="btn btn-outline"><span class="icon-calendar">📅</span> JADWAL MATCH</a>
     </div>
   </div>
   <div class="hero-image">

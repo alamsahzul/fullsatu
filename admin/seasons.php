@@ -1,11 +1,12 @@
 <?php
+require 'includes/auth.php';
 require '../config/db.php';
 require '../includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
     $stmt = $pdo->prepare("INSERT INTO seasons (name, league_type, status) VALUES (?, ?, 'active')");
     $stmt->execute([trim($_POST['name']), $_POST['league_type']]);
-    header('Location: seasons.php'); exit;
+    header('Location: seasons'); exit;
 }
 $seasons = $pdo->query("SELECT * FROM seasons ORDER BY id DESC")->fetchAll();
 

@@ -1,10 +1,11 @@
 <?php
+require 'includes/auth.php';
 require '../config/db.php';
 require '../includes/functions.php';
 
 $season = getCurrentSeason($pdo);
 if (!$season) {
-    header('Location: index.php'); exit;
+    header('Location: index'); exit;
 }
 
 $error = '';
@@ -24,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $winner = $s1 > $s2 ? $m['player1_id'] : $m['player2_id'];
         $stmt = $pdo->prepare("UPDATE matches SET player1_score=?, player2_score=?, winner_id=?, status='completed' WHERE id=?");
         $stmt->execute([$s1, $s2, $winner, $matchId]);
-        header('Location: matches.php?saved=1'); exit;
+        header('Location: matches?saved=1'); exit;
     }
 }
 
@@ -96,7 +97,7 @@ include 'includes/header.php';
         <?php endforeach; ?>
         <?php if(empty($matches)): ?>
         <tr>
-          <td colspan="4" style="text-align: center; padding: 20px; color: var(--color-text-muted);">Belum ada jadwal. Silakan <a href="generate.php" style="color: var(--color-primary);">generate jadwal</a> terlebih dahulu.</td>
+          <td colspan="4" style="text-align: center; padding: 20px; color: var(--color-text-muted);">Belum ada jadwal. Silakan <a href="generate" style="color: var(--color-primary);">generate jadwal</a> terlebih dahulu.</td>
         </tr>
         <?php endif; ?>
       </tbody>

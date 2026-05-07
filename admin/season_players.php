@@ -1,10 +1,11 @@
 <?php
+require 'includes/auth.php';
 require '../config/db.php';
 require '../includes/functions.php';
 
 $season = getCurrentSeason($pdo);
 if (!$season) {
-    header('Location: index.php'); exit;
+    header('Location: index'); exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($_POST['players'] ?? [] as $playerId) {
         $pdo->prepare("INSERT IGNORE INTO season_players (season_id, player_id) VALUES (?, ?)")->execute([$season['id'], (int)$playerId]);
     }
-    header('Location: season_players.php?saved=1'); exit;
+    header('Location: season_players?saved=1'); exit;
 }
 
 $players = $pdo->query("SELECT * FROM players ORDER BY name ASC")->fetchAll();
@@ -45,14 +46,14 @@ include 'includes/header.php';
       </label>
       <?php endforeach; ?>
       <?php if(empty($players)): ?>
-        <p style="color: var(--color-text-muted); grid-column: 1/-1;">Belum ada pemain terdaftar. Silakan <a href="players.php" style="color: var(--color-primary);">tambah pemain</a> terlebih dahulu.</p>
+        <p style="color: var(--color-text-muted); grid-column: 1/-1;">Belum ada pemain terdaftar. Silakan <a href="players" style="color: var(--color-primary);">tambah pemain</a> terlebih dahulu.</p>
       <?php endif; ?>
     </div>
     
     <div style="display: flex; gap: 15px;">
       <button class="btn btn-primary">Simpan Daftar Peserta</button>
       <?php if(count($selected) >= 2): ?>
-      <a href="generate.php" class="btn btn-outline">Lanjut Generate Jadwal →</a>
+      <a href="generate" class="btn btn-outline">Lanjut Generate Jadwal →</a>
       <?php endif; ?>
     </div>
   </form>

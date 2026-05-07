@@ -26,12 +26,12 @@
 
   <div class="header-menu">
     <nav class="main-nav">
-      <a href="<?= base_url('index.php') ?>" class="<?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">HOME</a>
-      <a href="<?= base_url('standings.php') ?>" class="<?= basename($_SERVER['PHP_SELF']) == 'standings.php' ? 'active' : '' ?>">STANDINGS</a>
-      <a href="<?= base_url('matches.php') ?>" class="<?= basename($_SERVER['PHP_SELF']) == 'matches.php' ? 'active' : '' ?>">MATCHES</a>
-
-      <a href="<?= base_url('rules.php') ?>" class="<?= basename($_SERVER['PHP_SELF']) == 'rules.php' ? 'active' : '' ?>">RULES</a>
-      <a href="<?= base_url('about.php') ?>" class="<?= basename($_SERVER['PHP_SELF']) == 'about.php' ? 'active' : '' ?>">ABOUT</a>
+      <?php $uri = $_SERVER['REQUEST_URI']; ?>
+      <a href="<?= base_url('') ?>" class="<?= strpos($uri, 'index') !== false || $uri == '/' || $uri == '/fullsatu/' ? 'active' : '' ?>">HOME</a>
+      <a href="<?= base_url('standings') ?>" class="<?= strpos($uri, 'standings') !== false ? 'active' : '' ?>">STANDINGS</a>
+      <a href="<?= base_url('matches') ?>" class="<?= strpos($uri, 'matches') !== false ? 'active' : '' ?>">MATCHES</a>
+      <a href="<?= base_url('rules') ?>" class="<?= strpos($uri, 'rules') !== false ? 'active' : '' ?>">RULES</a>
+      <a href="<?= base_url('about') ?>" class="<?= strpos($uri, 'about') !== false ? 'active' : '' ?>">ABOUT</a>
     </nav>
     <div class="header-actions">
       <a href="#" class="btn btn-primary">JOIN LEAGUE</a>
