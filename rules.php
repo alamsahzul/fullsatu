@@ -27,6 +27,7 @@ include 'includes/header.php';
       <li><strong>Foot Fault:</strong> Saat servis, kedua kaki harus di belakang baseline. Kaki tidak boleh menyentuh garis baseline atau masuk lapangan sebelum bola dipukul.</li>
       <li><strong>Double Bounce:</strong> Bola harus memantul satu kali di masing-masing sisi (area lawan lalu area sendiri) sebelum boleh melakukan pukulan volley.</li>
       <li><strong>The Kitchen:</strong> Dilarang melakukan volley (memukul bola tanpa pantul) jika posisi kaki menyentuh atau berada di dalam area Non-Volley Zone.</li>
+      <li><strong>Aksesoris & Kitchen:</strong> Jika aksesoris (topi, kacamata, botol, dll) yang dipakai atau dibawa pemain jatuh dan menyentuh area Kitchen atau garis Kitchen, maka dianggap sebagai pelanggaran (Fault).</li>
     </ul>
 
     <h2 style="color: var(--color-primary); margin-bottom: 15px; font-size: 24px;">3. Klasemen & Poin</h2>
