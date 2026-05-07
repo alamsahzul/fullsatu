@@ -35,13 +35,6 @@ if ($season) {
     $randomMatch = $stmt->fetch();
 }
 
-// Function to find rank in $allStandings
-function getPlayerRank($name, $standings) {
-    foreach ($standings as $i => $row) {
-        if ($row['name'] === $name) return $i + 1;
-    }
-    return '-';
-}
 ?>
 
 <!-- HERO SECTION -->
@@ -157,14 +150,14 @@ function getPlayerRank($name, $standings) {
               <tr>
                 <td style="color: var(--color-text-muted);"><?= $i + 1 ?></td>
                 <td>
-                  <div style="display: flex; align-items: center; gap: 10px;">
+                  <a href="<?= base_url('player?id=' . $row['id']) ?>" style="display: flex; align-items: center; gap: 10px; color: white;">
                     <?php if($row['photo']): ?>
                       <img src="<?= base_url('assets/uploads/players/' . $row['photo']) ?>" alt="<?= e($row['name']) ?>" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--color-border);">
                     <?php else: ?>
                       <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Avatar" style="width: 30px; height: 30px; border-radius: 50%; opacity: 0.5;">
                     <?php endif; ?>
                     <span style="font-weight: 600;"><?= e($row['name']) ?></span>
-                  </div>
+                  </a>
                 </td>
                 <td class="num"><?= $row['main'] ?></td>
                 <td class="num"><?= $row['w'] ?></td>
@@ -186,7 +179,7 @@ function getPlayerRank($name, $standings) {
     <div class="realtime-card match-card">
       <div class="match-date" style="text-align: center;">NEXT MATCH<br><span>LEG <?= e($nextMatch['leg_number'] ?? '-') ?></span></div>
       <div class="match-players">
-        <div class="player">
+        <a href="<?= $nextMatch ? base_url('player?id=' . $nextMatch['player1_id']) : '#' ?>" class="player" style="color: inherit;">
           <?php if($nextMatch && $nextMatch['p1_photo']): ?>
             <img src="<?= base_url('assets/uploads/players/' . $nextMatch['p1_photo']) ?>" alt="Player 1" class="player-img" style="object-fit: cover;">
           <?php else: ?>
@@ -194,9 +187,9 @@ function getPlayerRank($name, $standings) {
           <?php endif; ?>
           <h5><?= e($nextMatch['p1_name'] ?? 'TBA') ?></h5>
           <span class="rank">RANK #<?= $nextMatch ? getPlayerRank($nextMatch['p1_name'], $allStandings) : '-' ?></span>
-        </div>
+        </a>
         <div class="vs">Vs</div>
-        <div class="player">
+        <a href="<?= $nextMatch ? base_url('player?id=' . $nextMatch['player2_id']) : '#' ?>" class="player" style="color: inherit;">
           <?php if($nextMatch && $nextMatch['p2_photo']): ?>
             <img src="<?= base_url('assets/uploads/players/' . $nextMatch['p2_photo']) ?>" alt="Player 2" class="player-img" style="object-fit: cover;">
           <?php else: ?>
@@ -204,7 +197,7 @@ function getPlayerRank($name, $standings) {
           <?php endif; ?>
           <h5><?= e($nextMatch['p2_name'] ?? 'TBA') ?></h5>
           <span class="rank">RANK #<?= $nextMatch ? getPlayerRank($nextMatch['p2_name'], $allStandings) : '-' ?></span>
-        </div>
+        </a>
       </div>
       <div class="realtime-card-footer">
         <h4>JADWAL MATCH</h4>
@@ -217,7 +210,7 @@ function getPlayerRank($name, $standings) {
       <?php if($randomMatch): ?>
         <div class="match-date" style="text-align: center; padding-top: 30px;">RECENT RESULT<br><span>LEG <?= e($randomMatch['leg_number']) ?></span></div>
         <div class="match-players">
-          <div class="player">
+          <a href="<?= base_url('player?id=' . $randomMatch['player1_id']) ?>" class="player" style="color: inherit;">
             <?php if($randomMatch['p1_photo']): ?>
               <img src="<?= base_url('assets/uploads/players/' . $randomMatch['p1_photo']) ?>" alt="Player 1" class="player-img" style="object-fit: cover;">
             <?php else: ?>
@@ -225,9 +218,9 @@ function getPlayerRank($name, $standings) {
             <?php endif; ?>
             <h5><?= e($randomMatch['p1_name']) ?></h5>
             <div style="font-size: 28px; font-weight: 900; color: var(--color-primary); margin-top: 5px;"><?= e($randomMatch['player1_score']) ?></div>
-          </div>
+          </a>
           <div class="vs">Vs</div>
-          <div class="player">
+          <a href="<?= base_url('player?id=' . $randomMatch['player2_id']) ?>" class="player" style="color: inherit;">
             <?php if($randomMatch['p2_photo']): ?>
               <img src="<?= base_url('assets/uploads/players/' . $randomMatch['p2_photo']) ?>" alt="Player 2" class="player-img" style="object-fit: cover;">
             <?php else: ?>
@@ -235,7 +228,7 @@ function getPlayerRank($name, $standings) {
             <?php endif; ?>
             <h5><?= e($randomMatch['p2_name']) ?></h5>
             <div style="font-size: 28px; font-weight: 900; color: var(--color-primary); margin-top: 5px;"><?= e($randomMatch['player2_score']) ?></div>
-          </div>
+          </a>
         </div>
         <div class="realtime-card-footer">
           <h4>HIGHLIGHTS HASIL</h4>

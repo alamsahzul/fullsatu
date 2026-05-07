@@ -199,4 +199,10 @@ function syncSeasonMatches($pdo, $seasonId) {
     }
     return $newMatchesCount;
 }
+function getPlayerRank($name, $standings) {
+    foreach ($standings as $i => $row) {
+        if ($row['name'] === $name) return $i + 1;
+    }
+    return '-';
+}
 ?>

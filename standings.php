@@ -23,14 +23,14 @@ include 'includes/header.php';
     <tr class="<?= $i < 3 ? 'top' : '' ?>">
       <td class="num"><?= $i + 1 ?></td>
       <td>
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <?php if($row['photo']): ?>
-            <img src="<?= base_url('assets/uploads/players/' . $row['photo']) ?>" alt="<?= e($row['name']) ?>" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--color-border); object-fit: cover;">
-          <?php else: ?>
-            <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--color-border); object-fit: cover;">
-          <?php endif; ?>
-          <strong><?= e($row['name']) ?></strong>
-        </div>
+          <a href="<?= base_url('player?id=' . $row['id']) ?>" style="display: flex; align-items: center; gap: 12px; color: white;">
+            <?php if($row['photo']): ?>
+              <img src="<?= base_url('assets/uploads/players/' . $row['photo']) ?>" alt="<?= e($row['name']) ?>" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--color-border); object-fit: cover;">
+            <?php else: ?>
+              <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--color-border); object-fit: cover;">
+            <?php endif; ?>
+            <strong><?= e($row['name']) ?></strong>
+          </a>
       </td>
       <td class="num"><?= $row['main'] ?></td>
       <td class="num"><?= $row['w'] ?></td>

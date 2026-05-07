@@ -82,34 +82,38 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
               
               <!-- Player 1 -->
               <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 150px; justify-content: flex-end;">
-                <div style="text-align: right;">
+                <a href="<?= base_url('player?id=' . $m['player1_id']) ?>" style="text-align: right; color: inherit;">
                    <div style="<?= $m['winner_id'] == $m['player1_id'] ? 'color: var(--color-primary); font-weight: 700;' : 'color: white;' ?>"><?= e($m['player1']) ?></div>
                    <?php if($m['status'] === 'completed'): ?>
                      <div style="font-size: 24px; font-weight: 900; color: var(--color-primary);"><?= e($m['player1_score']) ?></div>
                    <?php endif; ?>
-                </div>
-                <?php if($m['photo1']): ?>
-                  <img src="<?= base_url('assets/uploads/players/'.$m['photo1']) ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'transparent' ?>;">
-                <?php else: ?>
-                  <img src="<?= base_url('assets/img/player_avatar.png') ?>" style="width: 45px; height: 45px; border-radius: 50%; opacity: 0.3;">
-                <?php endif; ?>
+                </a>
+                <a href="<?= base_url('player?id=' . $m['player1_id']) ?>">
+                  <?php if($m['photo1']): ?>
+                    <img src="<?= base_url('assets/uploads/players/'.$m['photo1']) ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'transparent' ?>;">
+                  <?php else: ?>
+                    <img src="<?= base_url('assets/img/player_avatar.png') ?>" style="width: 45px; height: 45px; border-radius: 50%; opacity: 0.3;">
+                  <?php endif; ?>
+                </a>
               </div>
               
               <div style="color: var(--color-text-muted); font-size: 14px; font-weight: 900; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 8px;">VS</div>
               
               <!-- Player 2 -->
               <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 150px; justify-content: flex-start;">
-                <?php if($m['photo2']): ?>
-                  <img src="<?= base_url('assets/uploads/players/'.$m['photo2']) ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'transparent' ?>;">
-                <?php else: ?>
-                  <img src="<?= base_url('assets/img/player_avatar.png') ?>" style="width: 45px; height: 45px; border-radius: 50%; opacity: 0.3;">
-                <?php endif; ?>
-                <div style="text-align: left;">
+                <a href="<?= base_url('player?id=' . $m['player2_id']) ?>">
+                  <?php if($m['photo2']): ?>
+                    <img src="<?= base_url('assets/uploads/players/'.$m['photo2']) ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'transparent' ?>;">
+                  <?php else: ?>
+                    <img src="<?= base_url('assets/img/player_avatar.png') ?>" style="width: 45px; height: 45px; border-radius: 50%; opacity: 0.3;">
+                  <?php endif; ?>
+                </a>
+                <a href="<?= base_url('player?id=' . $m['player2_id']) ?>" style="text-align: left; color: inherit;">
                    <div style="<?= $m['winner_id'] == $m['player2_id'] ? 'color: var(--color-primary); font-weight: 700;' : 'color: white;' ?>"><?= e($m['player2']) ?></div>
                    <?php if($m['status'] === 'completed'): ?>
                      <div style="font-size: 24px; font-weight: 900; color: var(--color-primary);"><?= e($m['player2_score']) ?></div>
                    <?php endif; ?>
-                </div>
+                </a>
               </div>
 
             </div>
