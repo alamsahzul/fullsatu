@@ -382,7 +382,7 @@ a {
 
 .realtime-table-wrap {
   flex: 1;
-  padding: 20px;
+  padding: 0;
 }
 
 .realtime-table-wrap table {
@@ -393,13 +393,16 @@ a {
 
 .realtime-table-wrap th {
   text-align: left;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--color-border);
+  padding: 12px 15px;
+  background: rgba(0,0,0,0.2);
   color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .realtime-table-wrap td {
-  padding: 12px 0;
+  padding: 12px 15px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
@@ -590,7 +593,7 @@ table { width: 100%; border-collapse: collapse; background: var(--color-bg-light
 th { background: rgba(0,0,0,0.3); color: var(--color-primary); text-align: left; padding: 14px; }
 td { padding: 13px 14px; border-top: 1px solid rgba(255,255,255,.05); }
 tr.top { background: rgba(250,204,21,.05); }
-td.num, th.num { text-align: center; }
+td.num, th.num { text-align: right; }
 .form-row { display: grid; gap: 12px; margin-bottom: 14px; }
 input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--color-border); background: var(--color-bg-dark); color: white; }
 .alert { padding: 12px 14px; border-radius: 8px; background: var(--color-primary); color: #000; font-weight: 700; margin-bottom: 16px; }

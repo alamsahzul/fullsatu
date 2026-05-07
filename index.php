@@ -140,35 +140,35 @@ function getPlayerRank($name, $standings) {
         <table>
           <thead>
             <tr>
-              <th>#</th>
+              <th style="width: 40px;">#</th>
               <th>Player</th>
-              <th>Matches</th>
-              <th>W</th>
-              <th>L</th>
-              <th>Points</th>
+              <th class="num">Matches</th>
+              <th class="num">W</th>
+              <th class="num">L</th>
+              <th class="num">Points</th>
             </tr>
           </thead>
           <tbody>
             <?php if(empty($topStandings)): ?>
-              <tr><td colspan="6" style="text-align:center;">Belum ada data</td></tr>
+              <tr><td colspan="6" style="text-align:center; padding: 30px;">Belum ada data</td></tr>
             <?php else: ?>
               <?php foreach ($topStandings as $i => $row): ?>
               <tr>
-                <td><?= $i + 1 ?></td>
+                <td style="color: var(--color-text-muted);"><?= $i + 1 ?></td>
                 <td>
-                  <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="display: flex; align-items: center; gap: 10px;">
                     <?php if($row['photo']): ?>
-                      <img src="<?= base_url('assets/uploads/players/' . $row['photo']) ?>" alt="<?= e($row['name']) ?>" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--color-border); object-fit: cover;">
+                      <img src="<?= base_url('assets/uploads/players/' . $row['photo']) ?>" alt="<?= e($row['name']) ?>" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--color-border);">
                     <?php else: ?>
-                      <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--color-border); object-fit: cover;">
+                      <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Avatar" style="width: 30px; height: 30px; border-radius: 50%; opacity: 0.5;">
                     <?php endif; ?>
-                    <span><?= e($row['name']) ?></span>
+                    <span style="font-weight: 600;"><?= e($row['name']) ?></span>
                   </div>
                 </td>
-                <td><?= $row['main'] ?></td>
-                <td><?= $row['w'] ?></td>
-                <td><?= $row['l'] ?></td>
-                <td><strong><?= $row['pts'] ?></strong></td>
+                <td class="num"><?= $row['main'] ?></td>
+                <td class="num"><?= $row['w'] ?></td>
+                <td class="num"><?= $row['l'] ?></td>
+                <td class="num"><strong style="color: var(--color-primary);"><?= $row['pts'] ?></strong></td>
               </tr>
               <?php endforeach; ?>
             <?php endif; ?>
@@ -183,7 +183,7 @@ function getPlayerRank($name, $standings) {
 
     <!-- NEXT MATCH CARD -->
     <div class="realtime-card match-card">
-      <div class="match-date">NEXT MATCH<br><span>LEG <?= e($nextMatch['leg_number'] ?? '-') ?></span></div>
+      <div class="match-date" style="text-align: center;">NEXT MATCH<br><span>LEG <?= e($nextMatch['leg_number'] ?? '-') ?></span></div>
       <div class="match-players">
         <div class="player">
           <?php if($nextMatch && $nextMatch['p1_photo']): ?>
@@ -214,25 +214,26 @@ function getPlayerRank($name, $standings) {
     <!-- ACTION CARD -->
     <div class="realtime-card action-card">
       <?php if($randomMatch): ?>
-        <div class="match-players" style="padding-top: 20px;">
+        <div class="match-date" style="text-align: center; padding-top: 30px;">RECENT RESULT<br><span>LEG <?= e($randomMatch['leg_number']) ?></span></div>
+        <div class="match-players">
           <div class="player">
             <?php if($randomMatch['p1_photo']): ?>
-              <img src="<?= base_url('assets/uploads/players/' . $randomMatch['p1_photo']) ?>" alt="Player 1" class="player-img" style="width: 60px; height: 60px; object-fit: cover;">
+              <img src="<?= base_url('assets/uploads/players/' . $randomMatch['p1_photo']) ?>" alt="Player 1" class="player-img" style="object-fit: cover;">
             <?php else: ?>
-              <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 1" class="player-img" style="width: 60px; height: 60px;">
+              <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 1" class="player-img">
             <?php endif; ?>
-            <h5 style="color: var(--color-primary); margin-top: 8px;"><?= e($randomMatch['p1_name']) ?></h5>
-            <div style="font-size: 28px; font-weight: 900; color: white;"><?= e($randomMatch['player1_score']) ?></div>
+            <h5><?= e($randomMatch['p1_name']) ?></h5>
+            <div style="font-size: 28px; font-weight: 900; color: var(--color-primary); margin-top: 5px;"><?= e($randomMatch['player1_score']) ?></div>
           </div>
-          <div class="vs" style="font-size: 14px; opacity: 0.5; margin-top: 30px;">VS</div>
+          <div class="vs">Vs</div>
           <div class="player">
             <?php if($randomMatch['p2_photo']): ?>
-              <img src="<?= base_url('assets/uploads/players/' . $randomMatch['p2_photo']) ?>" alt="Player 2" class="player-img" style="width: 60px; height: 60px; object-fit: cover;">
+              <img src="<?= base_url('assets/uploads/players/' . $randomMatch['p2_photo']) ?>" alt="Player 2" class="player-img" style="object-fit: cover;">
             <?php else: ?>
-              <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 2" class="player-img" style="width: 60px; height: 60px;">
+              <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 2" class="player-img">
             <?php endif; ?>
-            <h5 style="color: var(--color-primary); margin-top: 8px;"><?= e($randomMatch['p2_name']) ?></h5>
-            <div style="font-size: 28px; font-weight: 900; color: white;"><?= e($randomMatch['player2_score']) ?></div>
+            <h5><?= e($randomMatch['p2_name']) ?></h5>
+            <div style="font-size: 28px; font-weight: 900; color: var(--color-primary); margin-top: 5px;"><?= e($randomMatch['player2_score']) ?></div>
           </div>
         </div>
         <div class="realtime-card-footer">
