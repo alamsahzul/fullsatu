@@ -6,6 +6,7 @@ $pageTitle = 'Jadwal & Hasil - FullSatu';
 include 'includes/header.php';
 
 $search = isset($_GET['q']) ? trim($_GET['q']) : '';
+$search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
 ?>
 
 <div style="padding-top: 100px;"></div>
@@ -17,11 +18,13 @@ $search = isset($_GET['q']) ? trim($_GET['q']) : '';
 <?php if ($season): ?>
 <div class="container">
   <!-- SEARCH BAR -->
-  <div style="margin-bottom: 30px; display: flex; justify-content: flex-end;">
-    <form method="get" action="" style="display: flex; gap: 10px; width: 100%; max-width: 400px;">
-      <input type="text" name="q" value="<?= e($search) ?>" placeholder="Cari nama pemain..." style="flex: 1; background: var(--color-bg-light); border: 1px solid var(--color-border); color: white; padding: 12px 20px; border-radius: 30px; font-family: inherit;">
+  <div style="margin-bottom: 30px; display: flex; justify-content: center;">
+    <form method="get" action="" style="display: flex; gap: 10px; width: 100%; max-width: 600px; flex-wrap: wrap; justify-content: center;">
+      <input type="text" name="q" value="<?= e($search) ?>" placeholder="Pemain 1..." style="width: 180px; background: var(--color-bg-light); border: 1px solid var(--color-border); color: white; padding: 12px 20px; border-radius: 30px; font-family: inherit;">
+      <div style="align-self: center; color: var(--color-text-muted); font-weight: 700;">VS</div>
+      <input type="text" name="q2" value="<?= e($search2) ?>" placeholder="Pemain 2..." style="width: 180px; background: var(--color-bg-light); border: 1px solid var(--color-border); color: white; padding: 12px 20px; border-radius: 30px; font-family: inherit;">
       <button class="btn btn-primary" style="padding: 10px 25px; border-radius: 30px;">Cari</button>
-      <?php if($search): ?>
+      <?php if($search || $search2): ?>
         <a href="matches" class="btn btn-outline" style="padding: 10px 20px; border-radius: 30px; display: flex; align-items: center; justify-content: center;">Reset</a>
       <?php endif; ?>
     </form>
@@ -36,7 +39,17 @@ $search = isset($_GET['q']) ? trim($_GET['q']) : '';
           WHERE m.season_id = ? ";
   
   $params = [$season['id']];
-  if ($search) {
+  if ($search && $search2) {
+      $sql .= " AND (
+          (p1.name LIKE ? AND p2.name LIKE ?) 
+          OR 
+          (p1.name LIKE ? AND p2.name LIKE ?)
+      ) ";
+      $params[] = "%$search%";
+      $params[] = "%$search2%";
+      $params[] = "%$search2%";
+      $params[] = "%$search%";
+  } elseif ($search) {
       $sql .= " AND (p1.name LIKE ? OR p2.name LIKE ?) ";
       $params[] = "%$search%";
       $params[] = "%$search%";
