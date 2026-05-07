@@ -546,16 +546,8 @@ a {
 /* Footer */
 .site-footer {
   background: #03150d;
-  padding: 40px;
+  padding: 80px 0 40px;
   border-top: 1px solid var(--color-border);
-}
-
-.footer-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .footer-brand {
@@ -565,26 +557,69 @@ a {
 }
 
 .footer-logo-img {
-  height: 36px;
+  height: 50px;
+  width: auto;
 }
 
-.footer-social {
-  display: flex;
-  gap: 16px;
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  margin-bottom: 60px;
 }
 
-.footer-social a {
+.footer-title {
+  color: var(--color-text-main);
+  font-size: 18px;
+  margin-bottom: 25px;
+  position: relative;
+  display: inline-block;
+}
+
+.footer-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 30px;
+  height: 2px;
+  background: var(--color-primary);
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
   color: var(--color-text-muted);
-  transition: color 0.3s ease;
+  font-size: 14px;
+  transition: all 0.3s ease;
 }
 
-.footer-social a:hover {
+.footer-links a:hover {
   color: var(--color-primary);
+  padding-left: 5px;
 }
 
-.footer-copyright {
+.footer-bottom {
+  padding-top: 30px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.copyright {
   font-size: 14px;
   color: var(--color-text-muted);
+}
+
+.copyright strong {
+  color: var(--color-primary);
 }
 
 /* Global Tables and Forms (from original) */
@@ -665,6 +700,9 @@ input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px soli
   .main-nav { flex-direction: column; gap: 15px; text-align: center; }
   .header-actions { display: flex; justify-content: center; width: 100%; }
   
-  .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+  .footer-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+  .footer-brand { justify-content: center; }
+  .footer-title::after { left: 50%; transform: translateX(-50%); }
+  .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
 }
 

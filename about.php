@@ -26,23 +26,7 @@ include 'includes/header.php';
       </p>
     </div>
     
-    <div style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px;">
-      <h2 style="color: var(--color-text-main); margin-bottom: 30px;">HUBUNGI KAMI</h2>
-      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-        <div style="background: var(--color-bg-light); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); width: 250px;">
-          <h3 style="color: var(--color-primary); font-size: 18px; margin-bottom: 10px;">Email</h3>
-          <p style="color: var(--color-text-muted);">hello@fullsatu.com</p>
-        </div>
-        <div style="background: var(--color-bg-light); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); width: 250px;">
-          <h3 style="color: var(--color-primary); font-size: 18px; margin-bottom: 10px;">WhatsApp</h3>
-          <p style="color: var(--color-text-muted);">+62 812-3456-7890</p>
-        </div>
-        <div style="background: var(--color-bg-light); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); width: 250px;">
-          <h3 style="color: var(--color-primary); font-size: 18px; margin-bottom: 10px;">Lokasi</h3>
-          <p style="color: var(--color-text-muted);">FullSatu Pickleball Court</p>
-        </div>
-      </div>
-    </div>
+
     
   </div>
 </div>

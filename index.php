@@ -124,6 +124,7 @@ function getPlayerRank($name, $standings) {
         <p>Bangun koneksi, komongtsi, dan kebersamaan.</p>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -262,7 +263,7 @@ function getPlayerRank($name, $standings) {
       <p>Daftar dan buktikan kemampuanmu di FullSatu Single Man League!</p>
     </div>
     <div class="cta-action">
-      <a href="#" class="btn btn-primary"><span class="icon-user">👤</span> JOIN LEAGUE</a>
+      <a href="https://wa.me/6285298963132" class="btn btn-primary" target="_blank"><span class="icon-user">👤</span> JOIN LEAGUE</a>
     </div>
   </div>
 </section>
