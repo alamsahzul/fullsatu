@@ -16,7 +16,7 @@ function getCurrentSeason($pdo) {
 }
 
 function calculateStandings($pdo, $seasonId) {
-    $stmt = $pdo->prepare("SELECT p.id, p.name FROM season_players sp JOIN players p ON p.id = sp.player_id WHERE sp.season_id = ? ORDER BY p.name ASC");
+    $stmt = $pdo->prepare("SELECT p.id, p.name, p.photo FROM season_players sp JOIN players p ON p.id = sp.player_id WHERE sp.season_id = ? ORDER BY p.name ASC");
     $stmt->execute([$seasonId]);
     $players = $stmt->fetchAll();
 
@@ -25,6 +25,7 @@ function calculateStandings($pdo, $seasonId) {
         $table[$p['id']] = [
             'id' => $p['id'],
             'name' => $p['name'],
+            'photo' => $p['photo'],
             'main' => 0,
             'w' => 0,
             'l' => 0,

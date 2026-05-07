@@ -24,7 +24,11 @@ include 'includes/header.php';
       <td class="num"><?= $i + 1 ?></td>
       <td>
         <div style="display: flex; align-items: center; gap: 12px;">
-          <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--color-border); object-fit: cover;">
+          <?php if($row['photo']): ?>
+            <img src="<?= base_url('assets/uploads/players/' . $row['photo']) ?>" alt="<?= e($row['name']) ?>" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--color-border); object-fit: cover;">
+          <?php else: ?>
+            <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--color-border); object-fit: cover;">
+          <?php endif; ?>
           <strong><?= e($row['name']) ?></strong>
         </div>
       </td>
