@@ -7,9 +7,40 @@ include 'includes/header.php';
 
 // Get top 5 standings for the real-time section
 $topStandings = [];
+$nextMatch = null;
+$randomMatch = null;
+
 if ($season) {
     $allStandings = calculateStandings($pdo, $season['id']);
     $topStandings = array_slice($allStandings, 0, 5);
+    
+    // Get next scheduled match
+    $stmt = $pdo->prepare("SELECT m.*, p1.name AS p1_name, p2.name AS p2_name, p1.photo AS p1_photo, p2.photo AS p2_photo 
+                           FROM matches m 
+                           JOIN players p1 ON p1.id=m.player1_id 
+                           JOIN players p2 ON p2.id=m.player2_id 
+                           WHERE m.season_id=? AND m.status='scheduled' 
+                           ORDER BY m.round_number, m.id LIMIT 1");
+    $stmt->execute([$season['id']]);
+    $nextMatch = $stmt->fetch();
+    
+    // Get a random completed match for "Pertandingan Seru"
+    $stmt = $pdo->prepare("SELECT m.*, p1.name AS p1_name, p2.name AS p2_name, p1.photo AS p1_photo, p2.photo AS p2_photo 
+                           FROM matches m 
+                           JOIN players p1 ON p1.id=m.player1_id 
+                           JOIN players p2 ON p2.id=m.player2_id 
+                           WHERE m.season_id=? AND m.status='completed' 
+                           ORDER BY RAND() LIMIT 1");
+    $stmt->execute([$season['id']]);
+    $randomMatch = $stmt->fetch();
+}
+
+// Function to find rank in $allStandings
+function getPlayerRank($name, $standings) {
+    foreach ($standings as $i => $row) {
+        if ($row['name'] === $name) return $i + 1;
+    }
+    return '-';
 }
 ?>
 
@@ -152,18 +183,26 @@ if ($season) {
 
     <!-- NEXT MATCH CARD -->
     <div class="realtime-card match-card">
-      <div class="match-date">NEXT MATCH<br><span>25 MEI 2024 | 19:00</span></div>
+      <div class="match-date">NEXT MATCH<br><span>LEG <?= e($nextMatch['leg_number'] ?? '-') ?></span></div>
       <div class="match-players">
         <div class="player">
-          <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 1" class="player-img">
-          <h5>ANDI SETIAWAN</h5>
-          <span class="rank">RANK #1</span>
+          <?php if($nextMatch && $nextMatch['p1_photo']): ?>
+            <img src="<?= base_url('assets/uploads/players/' . $nextMatch['p1_photo']) ?>" alt="Player 1" class="player-img" style="object-fit: cover;">
+          <?php else: ?>
+            <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 1" class="player-img">
+          <?php endif; ?>
+          <h5><?= e($nextMatch['p1_name'] ?? 'TBA') ?></h5>
+          <span class="rank">RANK #<?= $nextMatch ? getPlayerRank($nextMatch['p1_name'], $allStandings) : '-' ?></span>
         </div>
         <div class="vs">Vs</div>
         <div class="player">
-          <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 2" class="player-img">
-          <h5>BUDI KURNIAWAN</h5>
-          <span class="rank">RANK #2</span>
+          <?php if($nextMatch && $nextMatch['p2_photo']): ?>
+            <img src="<?= base_url('assets/uploads/players/' . $nextMatch['p2_photo']) ?>" alt="Player 2" class="player-img" style="object-fit: cover;">
+          <?php else: ?>
+            <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 2" class="player-img">
+          <?php endif; ?>
+          <h5><?= e($nextMatch['p2_name'] ?? 'TBA') ?></h5>
+          <span class="rank">RANK #<?= $nextMatch ? getPlayerRank($nextMatch['p2_name'], $allStandings) : '-' ?></span>
         </div>
       </div>
       <div class="realtime-card-footer">
@@ -174,13 +213,41 @@ if ($season) {
 
     <!-- ACTION CARD -->
     <div class="realtime-card action-card">
-      <div class="action-img-wrap">
-        <img src="<?= base_url('assets/img/pickleball_action.png') ?>" alt="Action Shot">
-      </div>
-      <div class="realtime-card-footer">
-        <h4>PERTANDINGAN SERU</h4>
-        <p>Tanding dengan semangat, menang dengan sportivitas.</p>
-      </div>
+      <?php if($randomMatch): ?>
+        <div class="match-players" style="padding-top: 20px;">
+          <div class="player">
+            <?php if($randomMatch['p1_photo']): ?>
+              <img src="<?= base_url('assets/uploads/players/' . $randomMatch['p1_photo']) ?>" alt="Player 1" class="player-img" style="width: 60px; height: 60px; object-fit: cover;">
+            <?php else: ?>
+              <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 1" class="player-img" style="width: 60px; height: 60px;">
+            <?php endif; ?>
+            <h5 style="color: var(--color-primary); margin-top: 8px;"><?= e($randomMatch['p1_name']) ?></h5>
+            <div style="font-size: 28px; font-weight: 900; color: white;"><?= e($randomMatch['player1_score']) ?></div>
+          </div>
+          <div class="vs" style="font-size: 14px; opacity: 0.5; margin-top: 30px;">VS</div>
+          <div class="player">
+            <?php if($randomMatch['p2_photo']): ?>
+              <img src="<?= base_url('assets/uploads/players/' . $randomMatch['p2_photo']) ?>" alt="Player 2" class="player-img" style="width: 60px; height: 60px; object-fit: cover;">
+            <?php else: ?>
+              <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 2" class="player-img" style="width: 60px; height: 60px;">
+            <?php endif; ?>
+            <h5 style="color: var(--color-primary); margin-top: 8px;"><?= e($randomMatch['p2_name']) ?></h5>
+            <div style="font-size: 28px; font-weight: 900; color: white;"><?= e($randomMatch['player2_score']) ?></div>
+          </div>
+        </div>
+        <div class="realtime-card-footer">
+          <h4>HIGHLIGHTS HASIL</h4>
+          <p>Momen seru antara <?= e($randomMatch['p1_name']) ?> vs <?= e($randomMatch['p2_name']) ?>.</p>
+        </div>
+      <?php else: ?>
+        <div class="action-img-wrap">
+          <img src="<?= base_url('assets/img/pickleball_action.png') ?>" alt="Action Shot">
+        </div>
+        <div class="realtime-card-footer">
+          <h4>PERTANDINGAN SERU</h4>
+          <p>Tanding dengan semangat, menang dengan sportivitas.</p>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
 </section>
