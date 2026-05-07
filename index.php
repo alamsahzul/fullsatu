@@ -124,7 +124,12 @@ if ($season) {
               <?php foreach ($topStandings as $i => $row): ?>
               <tr>
                 <td><?= $i + 1 ?></td>
-                <td><?= e($row['name']) ?></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--color-border); object-fit: cover;">
+                    <span><?= e($row['name']) ?></span>
+                  </div>
+                </td>
                 <td><?= $row['main'] ?></td>
                 <td><?= $row['w'] ?></td>
                 <td><?= $row['l'] ?></td>

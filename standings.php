@@ -22,7 +22,12 @@ include 'includes/header.php';
     <?php foreach ($standings as $i => $row): ?>
     <tr class="<?= $i < 3 ? 'top' : '' ?>">
       <td class="num"><?= $i + 1 ?></td>
-      <td><strong><?= e($row['name']) ?></strong></td>
+      <td>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--color-border); object-fit: cover;">
+          <strong><?= e($row['name']) ?></strong>
+        </div>
+      </td>
       <td class="num"><?= $row['main'] ?></td>
       <td class="num"><?= $row['w'] ?></td>
       <td class="num"><?= $row['l'] ?></td>

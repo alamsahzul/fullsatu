@@ -12,6 +12,7 @@
 </head>
 <body>
 <header class="site-header">
+  <div class="container header-inner">
   <div class="brand">
     <img src="<?= base_url('assets/img/hero_logo.png') ?>" alt="FullSatu Logo" class="brand-logo-img">
     <div class="brand-text">
@@ -25,16 +26,17 @@
 
   <div class="header-menu">
     <nav class="main-nav">
-      <a href="<?= base_url('index.php') ?>" class="active">HOME</a>
-      <a href="<?= base_url('standings.php') ?>">STANDINGS</a>
-      <a href="<?= base_url('matches.php') ?>">MATCHES</a>
-      <a href="#">PLAYERS</a>
-      <a href="#">RULES</a>
-      <a href="#">ABOUT</a>
+      <a href="<?= base_url('index.php') ?>" class="<?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">HOME</a>
+      <a href="<?= base_url('standings.php') ?>" class="<?= basename($_SERVER['PHP_SELF']) == 'standings.php' ? 'active' : '' ?>">STANDINGS</a>
+      <a href="<?= base_url('matches.php') ?>" class="<?= basename($_SERVER['PHP_SELF']) == 'matches.php' ? 'active' : '' ?>">MATCHES</a>
+
+      <a href="<?= base_url('rules.php') ?>" class="<?= basename($_SERVER['PHP_SELF']) == 'rules.php' ? 'active' : '' ?>">RULES</a>
+      <a href="<?= base_url('about.php') ?>" class="<?= basename($_SERVER['PHP_SELF']) == 'about.php' ? 'active' : '' ?>">ABOUT</a>
     </nav>
     <div class="header-actions">
       <a href="#" class="btn btn-primary">JOIN LEAGUE</a>
     </div>
+  </div>
   </div>
 </header>
 <main class="main-content">
