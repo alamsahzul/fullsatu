@@ -2,7 +2,7 @@
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <img src="assets/img/hero_logo.png" alt="FullSatu Logo" class="footer-logo-img">
+      <img src="<?= base_url('assets/img/hero_logo.png') ?>" alt="FullSatu Logo" class="footer-logo-img">
       <div class="brand-text">
         <strong>FULLSATU</strong>
         <span>SINGLE MAN LEAGUE</span>
@@ -18,5 +18,18 @@
     </div>
   </div>
 </footer>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileToggle = document.querySelector('.mobile-toggle');
+    const headerMenu = document.querySelector('.header-menu');
+
+    if (mobileToggle && headerMenu) {
+      mobileToggle.addEventListener('click', function() {
+        mobileToggle.classList.toggle('active');
+        headerMenu.classList.toggle('active');
+      });
+    }
+  });
+</script>
 </body>
 </html>

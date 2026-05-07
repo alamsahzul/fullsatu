@@ -20,13 +20,13 @@ if ($season) {
     <h2>SINGLE MAN LEAGUE</h2>
     <p>Liga pickleball single player pertama yang mengutamakan sportivitas, persaingan sehat, dan keseruan di setiap match.</p>
     <div class="hero-buttons">
-      <a href="standings.php" class="btn btn-primary"><span class="icon-trophy">🏆</span> LIHAT KLASEMEN</a>
-      <a href="matches.php" class="btn btn-outline"><span class="icon-calendar">📅</span> JADWAL MATCH</a>
+      <a href="<?= base_url('standings.php') ?>" class="btn btn-primary"><span class="icon-trophy">🏆</span> LIHAT KLASEMEN</a>
+      <a href="<?= base_url('matches.php') ?>" class="btn btn-outline"><span class="icon-calendar">📅</span> JADWAL MATCH</a>
     </div>
   </div>
   <div class="hero-image">
     <!-- Hero image is managed via CSS or img tag, let's use a large background or img -->
-    <img src="assets/img/hero_logo.png" alt="Fullsatu Shield" class="hero-shield">
+    <img src="<?= base_url('assets/img/hero_logo.png') ?>" alt="Fullsatu Shield" class="hero-shield">
   </div>
 </section>
 
@@ -146,13 +146,13 @@ if ($season) {
       <div class="match-date">NEXT MATCH<br><span>25 MEI 2024 | 19:00</span></div>
       <div class="match-players">
         <div class="player">
-          <img src="assets/img/player_avatar.png" alt="Player 1" class="player-img">
+          <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 1" class="player-img">
           <h5>ANDI SETIAWAN</h5>
           <span class="rank">RANK #1</span>
         </div>
         <div class="vs">Vs</div>
         <div class="player">
-          <img src="assets/img/player_avatar.png" alt="Player 2" class="player-img">
+          <img src="<?= base_url('assets/img/player_avatar.png') ?>" alt="Player 2" class="player-img">
           <h5>BUDI KURNIAWAN</h5>
           <span class="rank">RANK #2</span>
         </div>
@@ -166,7 +166,7 @@ if ($season) {
     <!-- ACTION CARD -->
     <div class="realtime-card action-card">
       <div class="action-img-wrap">
-        <img src="assets/img/pickleball_action.png" alt="Action Shot">
+        <img src="<?= base_url('assets/img/pickleball_action.png') ?>" alt="Action Shot">
       </div>
       <div class="realtime-card-footer">
         <h4>PERTANDINGAN SERU</h4>
@@ -177,7 +177,7 @@ if ($season) {
 </section>
 
 <!-- CTA SECTION -->
-<section class="cta-section" style="background-image: url('assets/img/pickleball_cta_bg.png');">
+<section class="cta-section" style="background-image: url('<?= base_url('assets/img/pickleball_cta_bg.png') ?>');">
   <div class="cta-overlay"></div>
   <div class="cta-content">
     <div class="cta-text">

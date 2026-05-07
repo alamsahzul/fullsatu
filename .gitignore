@@ -29,6 +29,8 @@ yarn-error.log
 # Log files
 *.log
 
+/config/db.php
+
 # Uploads or cache
 /uploads/
 /cache/

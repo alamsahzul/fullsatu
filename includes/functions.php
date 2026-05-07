@@ -3,6 +3,13 @@ function e($value) {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
 
+function base_url($path = '') {
+    if (defined('BASE_URL')) {
+        return rtrim(BASE_URL, '/') . '/' . ltrim($path, '/');
+    }
+    return '/' . ltrim($path, '/');
+}
+
 function getCurrentSeason($pdo) {
     $stmt = $pdo->query("SELECT * FROM seasons ORDER BY id DESC LIMIT 1");
     return $stmt->fetch();
