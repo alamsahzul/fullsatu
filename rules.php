@@ -21,12 +21,12 @@ include 'includes/header.php';
       <li>Tidak ada aturan selisih 2 poin (no deuce). Pemain yang pertama kali menyentuh angka 11 dinyatakan sebagai pemenang (Sudden Death 11).</li>
     </ul>
 
-    <h2 style="color: var(--color-primary); margin-bottom: 15px; font-size: 24px;">2. Aturan Servis</h2>
+    <h2 style="color: var(--color-primary); margin-bottom: 15px; font-size: 24px;">2. Aturan Servis & Pelanggaran</h2>
     <ul style="color: var(--color-text-main); margin-bottom: 30px; padding-left: 20px; line-height: 1.8;">
-      <li>Servis harus dilakukan dengan ayunan bawah (underhand) dengan kontak raket berada di bawah pinggang.</li>
-      <li>Bola harus dipantulkan ke tanah satu kali (drop serve) atau dipukul di udara sebelum menyentuh tanah (volley serve).</li>
       <li>Servis dilakukan secara diagonal menyilang ke area servis lawan.</li>
-      <li>Jika poin genap (0, 2, 4), servis dilakukan dari sisi kanan. Jika ganjil (1, 3, 5), servis dilakukan dari sisi kiri.</li>
+      <li><strong>Foot Fault:</strong> Saat servis, kedua kaki harus di belakang baseline. Kaki tidak boleh menyentuh garis baseline atau masuk lapangan sebelum bola dipukul.</li>
+      <li><strong>Double Bounce:</strong> Bola harus memantul satu kali di masing-masing sisi (area lawan lalu area sendiri) sebelum boleh melakukan pukulan volley.</li>
+      <li><strong>The Kitchen:</strong> Dilarang melakukan volley (memukul bola tanpa pantul) jika posisi kaki menyentuh atau berada di dalam area Non-Volley Zone.</li>
     </ul>
 
     <h2 style="color: var(--color-primary); margin-bottom: 15px; font-size: 24px;">3. Klasemen & Poin</h2>
@@ -35,10 +35,17 @@ include 'includes/header.php';
       <li>Peringkat klasemen ditentukan secara berurutan berdasarkan: Poin Tertinggi, Selisih Skor (Diff) Tertinggi, Skor Memasukkan (PF) Tertinggi, dan Alfabet nama.</li>
     </ul>
 
-    <h2 style="color: var(--color-primary); margin-bottom: 15px; font-size: 24px;">4. Sportivitas</h2>
+    <h2 style="color: var(--color-primary); margin-bottom: 15px; font-size: 24px;">4. Wewenang Wasit</h2>
+    <ul style="color: var(--color-text-main); margin-bottom: 30px; padding-left: 20px; line-height: 1.8;">
+      <li>Keputusan wasit di lapangan bersifat <strong>MUTLAK</strong> dan tidak dapat diganggu gugat.</li>
+      <li>Wasit berhak memberikan teguran, pengurangan poin, hingga diskualifikasi jika pemain melanggar aturan sportivitas.</li>
+    </ul>
+
+    <h2 style="color: var(--color-primary); margin-bottom: 15px; font-size: 24px;">5. Sportivitas & Etika</h2>
     <ul style="color: var(--color-text-main); margin-bottom: 0; padding-left: 20px; line-height: 1.8;">
-      <li>Semua pemain diharapkan menjunjung tinggi sportivitas dan kejujuran dalam menghitung poin atau menyatakan bola out/in.</li>
-      <li>Keputusan pemain bersifat mengikat dalam permainan tanpa wasit (honor system).</li>
+      <li><strong>No Provocation:</strong> Dilarang keras melakukan provokasi berlebihan, intimidasi, atau mengeluarkan kata-kata kasar (bacot) kepada lawan maupun wasit.</li>
+      <li>Semua pemain wajib menjunjung tinggi kejujuran. Jika tidak ada wasit, pemain harus jujur menyatakan bola out/in di areanya sendiri.</li>
+      <li>Pemain wajib bersalaman dengan lawan dan wasit setelah pertandingan berakhir.</li>
     </ul>
 
   </div>
