@@ -14,7 +14,7 @@ include 'includes/header.php';
 <div class="card" style="margin-bottom: 60px;">
   <div style="background: var(--color-bg-dark); border: 1px solid var(--color-border); padding: 40px; border-radius: 16px; display: flex; flex-direction: column; gap: 40px; align-items: center; text-align: center;">
     
-    <img src="<?= base_url('assets/img/hero_logo.png') ?>" alt="FullSatu Shield" style="max-width: 250px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">
+    <img src="<?= base_url('assets/img/logo.png') ?>" alt="FullSatu Shield" style="max-width: 250px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">
     
     <div style="max-width: 800px;">
       <h2 style="color: var(--color-primary); margin-bottom: 20px; font-size: 32px;">SEJARAH & VISI</h2>

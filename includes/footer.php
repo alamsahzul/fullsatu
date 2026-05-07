@@ -5,7 +5,7 @@
       <!-- Column 1: Brand -->
       <div class="footer-col">
         <div class="footer-brand">
-          <img src="<?= base_url('assets/img/hero_logo.png') ?>" alt="FullSatu Logo" class="footer-logo-img">
+          <img src="<?= base_url('assets/img/logo.png') ?>" alt="FullSatu Logo" class="footer-logo-img">
           <div class="brand-text">
             <strong>FULLSATU</strong>
             <span>SINGLE MAN LEAGUE</span>

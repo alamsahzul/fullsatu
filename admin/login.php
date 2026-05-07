@@ -38,7 +38,7 @@ $pageTitle = 'Login Admin - FullSatu';
 <body style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--color-bg-dark); margin: 0; padding: 20px;">
 
   <div style="background: var(--color-bg-light); border: 1px solid var(--color-border); padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center;">
-    <img src="<?= base_url('assets/img/hero_logo.png') ?>" alt="Logo" style="width: 80px; margin-bottom: 20px;">
+    <img src="<?= base_url('assets/img/logo.png') ?>" alt="Logo" style="width: 80px; margin-bottom: 20px;">
     <h1 style="font-family: var(--font-heading); color: var(--color-primary); font-size: 28px; margin-bottom: 5px;">ADMIN LOGIN</h1>
     <p style="color: var(--color-text-muted); margin-bottom: 30px; font-size: 14px;">Masukkan kredensial untuk mengakses panel kontrol.</p>
     

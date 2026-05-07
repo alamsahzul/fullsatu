@@ -14,7 +14,7 @@
 <header class="site-header">
   <div class="container header-inner">
   <div class="brand">
-    <img src="<?= base_url('assets/img/hero_logo.png') ?>" alt="FullSatu Logo" class="brand-logo-img">
+    <img src="<?= base_url('assets/img/logo.png') ?>" alt="FullSatu Logo" class="brand-logo-img">
     <div class="brand-text">
       <strong>FULLSATU</strong>
       <span>SINGLE MAN LEAGUE</span>

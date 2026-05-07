@@ -111,7 +111,7 @@ if (!isset($pageTitle)) $pageTitle = 'Admin Panel - FullSatu';
 
 <aside class="admin-sidebar">
   <div class="admin-brand">
-    <img src="<?= base_url('assets/img/hero_logo.png') ?>" alt="Logo">
+    <img src="<?= base_url('assets/img/logo.png') ?>" alt="Logo">
     <div><strong>ADMIN</strong></div>
   </div>
   <nav class="admin-nav">

@@ -50,7 +50,7 @@ if ($season) {
   </div>
   <div class="hero-image">
     <!-- Hero image is managed via CSS or img tag, let's use a large background or img -->
-    <img src="<?= base_url('assets/img/hero_logo.png') ?>" alt="Fullsatu Shield" class="hero-shield">
+    <img src="<?= base_url('assets/img/logo.png') ?>" alt="Fullsatu Shield" class="hero-shield">
   </div>
 </section>
 
