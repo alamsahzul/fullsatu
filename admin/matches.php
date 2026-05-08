@@ -119,13 +119,18 @@ include 'includes/header.php';
             <?= $m['status'] === 'completed' ? e($m['player1_score']).' - '.e($m['player2_score']) : '<span style="color:var(--color-text-muted); font-weight:400; font-size:12px;">Belum Main</span>' ?>
           </td>
           <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: right;">
-            <form method="post" style="display:flex; gap:8px; justify-content: flex-end; align-items:center;">
-              <input type="hidden" name="match_id" value="<?= $m['id'] ?>">
-              <input type="number" name="player1_score" min="0" value="<?= e($m['player1_score'] ?? '') ?>" required style="width: 60px; background: var(--color-bg-dark); border: 1px solid var(--color-border); color: white; padding: 8px; border-radius: 6px; text-align: center;">
-              <span style="color: var(--color-text-muted);">-</span>
-              <input type="number" name="player2_score" min="0" value="<?= e($m['player2_score'] ?? '') ?>" required style="width: 60px; background: var(--color-bg-dark); border: 1px solid var(--color-border); color: white; padding: 8px; border-radius: 6px; text-align: center;">
-              <button class="btn btn-primary" style="padding: 8px 16px;">Simpan</button>
-            </form>
+            <div style="display:flex; gap:8px; justify-content: flex-end; align-items:center;">
+              <form method="post" style="display:flex; gap:8px; align-items:center;">
+                <input type="hidden" name="match_id" value="<?= $m['id'] ?>">
+                <input type="number" name="player1_score" min="0" value="<?= e($m['player1_score'] ?? '') ?>" required style="width: 50px; background: var(--color-bg-dark); border: 1px solid var(--color-border); color: white; padding: 5px; border-radius: 6px; text-align: center;">
+                <span style="color: var(--color-text-muted);">-</span>
+                <input type="number" name="player2_score" min="0" value="<?= e($m['player2_score'] ?? '') ?>" required style="width: 50px; background: var(--color-bg-dark); border: 1px solid var(--color-border); color: white; padding: 5px; border-radius: 6px; text-align: center;">
+                <button class="btn btn-primary" style="padding: 5px 12px; font-size: 12px;">Simpan</button>
+              </form>
+              <a href="match_edit?id=<?= $m['id'] ?>" class="btn btn-outline" style="padding: 5px 12px; font-size: 12px; display: flex; align-items: center; gap: 5px;">
+                <span>📝</span> Dok
+              </a>
+            </div>
           </td>
         </tr>
         <?php endforeach; ?>

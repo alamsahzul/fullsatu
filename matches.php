@@ -124,6 +124,29 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
             </span>
           </td>
         </tr>
+        
+        <?php if($m['match_photo'] || $m['match_notes']): ?>
+        <tr class="documentation-row">
+          <td colspan="3" style="padding: 0 20px 20px 75px;">
+            <div style="background: var(--color-bg-light); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; display: flex; gap: 20px; flex-wrap: wrap;">
+              <?php if($m['match_photo']): ?>
+                <div style="flex: 0 0 200px;">
+                  <a href="<?= base_url('assets/uploads/matches/' . $m['match_photo']) ?>" target="_blank">
+                    <img src="<?= base_url('assets/uploads/matches/' . $m['match_photo']) ?>" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                  </a>
+                </div>
+              <?php endif; ?>
+              <div style="flex: 1; min-width: 250px;">
+                <h4 style="color: var(--color-primary); font-size: 13px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Jalannya Pertandingan</h4>
+                <p style="color: var(--color-text-main); font-size: 14px; line-height: 1.6; font-style: italic;">
+                  "<?= nl2br(e($m['match_notes'] ?? 'Tidak ada catatan pertandingan.')) ?>"
+                </p>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <?php endif; ?>
+
         <?php endforeach; ?>
         <?php if(empty($matches)): ?>
           <tr>

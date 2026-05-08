@@ -131,12 +131,20 @@ $winRate = ($playerStats && $playerStats['main'] > 0) ? round(($playerStats['w']
                   <span style="color: var(--color-text-muted); font-size: 11px;">VS</span>
                   <span><?= e($m['p2_name']) ?></span>
                 </div>
+                <?php if($m['match_notes']): ?>
+                  <div style="font-size: 11px; color: var(--color-text-muted); margin-top: 5px; font-style: italic; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    "<?= e($m['match_notes']) ?>"
+                  </div>
+                <?php endif; ?>
               </td>
               <td class="num">
                 <strong style="color: white;"><?= $m['player1_score'] ?> - <?= $m['player2_score'] ?></strong>
               </td>
               <td style="text-align: center; color: var(--color-primary); font-weight: 700;">
                 #<?= $opponentRank ?>
+                <?php if($m['match_photo']): ?>
+                  <div style="margin-top: 5px;"><span title="Ada Foto" style="cursor:help;">📸</span></div>
+                <?php endif; ?>
               </td>
             </tr>
           <?php endforeach; ?>
