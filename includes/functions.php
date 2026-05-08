@@ -199,6 +199,11 @@ function syncSeasonMatches($pdo, $seasonId) {
     }
     return $newMatchesCount;
 }
+function getAllSeasons($pdo) {
+    $stmt = $pdo->query("SELECT * FROM seasons ORDER BY id DESC");
+    return $stmt->fetchAll();
+}
+
 function getPlayerRank($name, $standings) {
     foreach ($standings as $i => $row) {
         if ($row['name'] === $name) return $i + 1;

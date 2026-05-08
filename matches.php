@@ -1,7 +1,19 @@
 <?php
 require 'config/db.php';
 require 'includes/functions.php';
-$season = getCurrentSeason($pdo);
+$allSeasons = getAllSeasons($pdo);
+$selectedSeasonId = isset($_GET['season_id']) ? (int)$_GET['season_id'] : 0;
+
+// If no season selected or invalid, get current season
+if ($selectedSeasonId > 0) {
+    $stmt = $pdo->prepare("SELECT * FROM seasons WHERE id = ?");
+    $stmt->execute([$selectedSeasonId]);
+    $season = $stmt->fetch();
+} else {
+    $season = getCurrentSeason($pdo);
+    $selectedSeasonId = $season['id'] ?? 0;
+}
+
 $pageTitle = 'Jadwal & Hasil - FullSatu';
 include 'includes/header.php';
 
@@ -12,7 +24,20 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
 <div style="padding-top: 100px;"></div>
 <section class="hero-page">
   <h1>Jadwal & Hasil</h1>
-  <p>Daftar pertandingan season aktif: <?= e($season['name'] ?? '-') ?></p>
+  
+  <!-- SEASON SWITCHER -->
+  <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px; align-items: center;">
+    <span style="color: var(--color-text-muted); font-size: 14px;">Pilih Musim:</span>
+    <form method="get" id="seasonMatchForm">
+      <select name="season_id" onchange="document.getElementById('seasonMatchForm').submit()" style="background: var(--color-bg-light); border: 1px solid var(--color-border); color: var(--color-primary); padding: 8px 15px; border-radius: 30px; font-weight: 700; cursor: pointer; min-width: 150px;">
+        <?php foreach($allSeasons as $s): ?>
+          <option value="<?= $s['id'] ?>" <?= $s['id'] == $selectedSeasonId ? 'selected' : '' ?>>
+            <?= e($s['name']) ?> <?= $s['status'] == 'active' ? '(Active)' : '' ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+    </form>
+  </div>
 </section>
 
 <?php if ($season): ?>
@@ -127,21 +152,40 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
         
         <?php if($m['match_photo'] || $m['match_notes']): ?>
         <tr class="documentation-row">
-          <td colspan="3" style="padding: 0 20px 20px 75px; border-top: none;">
-            <div style="background: var(--color-bg-light); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; display: flex; gap: 20px; flex-wrap: wrap;">
+          <td colspan="3" style="padding: 0 20px 30px 75px; border-top: none;">
+            <div style="background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; display: flex; gap: 30px; flex-wrap: wrap; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; overflow: hidden;">
+              
+              <!-- Subtle Background Icon -->
+              <div style="position: absolute; right: -20px; bottom: -20px; font-size: 120px; opacity: 0.03; color: white; transform: rotate(-15deg); pointer-events: none;">🏆</div>
+
               <?php if($m['match_photo']): ?>
-                <div style="flex: 0 0 200px;">
-                  <a href="<?= base_url('assets/uploads/matches/' . $m['match_photo']) ?>" target="_blank">
-                    <img src="<?= base_url('assets/uploads/matches/' . $m['match_photo']) ?>" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <div style="flex: 0 0 280px; position: relative;">
+                  <a href="<?= base_url('assets/uploads/matches/' . $m['match_photo']) ?>" target="_blank" style="display: block; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.4); transform: rotate(-2deg); transition: transform 0.3s ease;">
+                    <img src="<?= base_url('assets/uploads/matches/' . $m['match_photo']) ?>" style="width: 100%; height: 180px; object-fit: cover; display: block;" onmouseover="this.parentElement.style.transform='rotate(0deg)'" onmouseout="this.parentElement.style.transform='rotate(-2deg)'">
                   </a>
                 </div>
               <?php endif; ?>
-              <div style="flex: 1; min-width: 250px;">
-                <h4 style="color: var(--color-primary); font-size: 13px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Jalannya Pertandingan</h4>
-                <p style="color: var(--color-text-main); font-size: 14px; line-height: 1.6; font-style: italic;">
-                  "<?= nl2br(e($m['match_notes'] ?? 'Tidak ada catatan pertandingan.')) ?>"
-                </p>
+
+              <div style="flex: 1; min-width: 300px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                   <div style="width: 30px; height: 2px; background: var(--color-primary);"></div>
+                   <h4 style="color: var(--color-primary); font-size: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">JALANNYA PERTANDINGAN</h4>
+                </div>
+                
+                <div style="position: relative; padding-left: 0;">
+                  <p style="color: #e2e8f0; font-size: 16px; line-height: 1.8; font-style: italic; font-family: 'Inter', sans-serif;">
+                    <span style="font-size: 40px; color: var(--color-primary); position: absolute; left: -10px; top: -15px; opacity: 0.2; font-family: serif;">"</span>
+                    <?= nl2br(e($m['match_notes'] ?? 'Tidak ada catatan pertandingan.')) ?>
+                    <span style="font-size: 40px; color: var(--color-primary); opacity: 0.2; font-family: serif; vertical-align: bottom; line-height: 0;">"</span>
+                  </p>
+                </div>
+
+                <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
+                   <div style="font-size: 12px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 1px;">Match Highlight</div>
+                   <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.05);"></div>
+                </div>
               </div>
+
             </div>
           </td>
         </tr>

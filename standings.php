@@ -1,14 +1,39 @@
 <?php
 require 'config/db.php';
 require 'includes/functions.php';
-$season = getCurrentSeason($pdo);
+$allSeasons = getAllSeasons($pdo);
+$selectedSeasonId = isset($_GET['season_id']) ? (int)$_GET['season_id'] : 0;
+
+// If no season selected or invalid, get current season
+if ($selectedSeasonId > 0) {
+    $stmt = $pdo->prepare("SELECT * FROM seasons WHERE id = ?");
+    $stmt->execute([$selectedSeasonId]);
+    $season = $stmt->fetch();
+} else {
+    $season = getCurrentSeason($pdo);
+    $selectedSeasonId = $season['id'] ?? 0;
+}
+
 $pageTitle = 'Klasemen - FullSatu';
 include 'includes/header.php';
 ?>
 <div style="padding-top: 100px;"></div>
 <section class="hero-page">
-  <h1>Klasemen Lengkap</h1>
-  <p>FullSatu Single Man League - Season <?= e($season['name'] ?? '-') ?></p>
+  <h1>Klasemen Liga</h1>
+  
+  <!-- SEASON SWITCHER -->
+  <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px; align-items: center;">
+    <span style="color: var(--color-text-muted); font-size: 14px;">Pilih Musim:</span>
+    <form method="get" id="seasonForm">
+      <select name="season_id" onchange="document.getElementById('seasonForm').submit()" style="background: var(--color-bg-light); border: 1px solid var(--color-border); color: var(--color-primary); padding: 8px 15px; border-radius: 30px; font-weight: 700; cursor: pointer; min-width: 150px;">
+        <?php foreach($allSeasons as $s): ?>
+          <option value="<?= $s['id'] ?>" <?= $s['id'] == $selectedSeasonId ? 'selected' : '' ?>>
+            <?= e($s['name']) ?> <?= $s['status'] == 'active' ? '(Active)' : '' ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+    </form>
+  </div>
 </section>
 <?php if (!$season): ?>
   <div class="alert">Belum ada season. Buat season dari halaman admin.</div>
