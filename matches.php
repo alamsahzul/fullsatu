@@ -74,10 +74,10 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
       <tbody>
         <?php foreach($matches as $i => $m): ?>
         <tr>
-          <td>
+          <td style="<?= ($m['match_photo'] || $m['match_notes']) ? 'padding-bottom: 5px;' : '' ?>">
             <div style="font-size: 14px; font-weight: 700; color: var(--color-primary);"><?= $i + 1 ?></div>
           </td>
-          <td>
+          <td style="<?= ($m['match_photo'] || $m['match_notes']) ? 'padding-bottom: 5px;' : '' ?>">
             <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; padding: 10px 0;">
               
               <!-- Player 1 -->
@@ -118,7 +118,7 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
 
             </div>
           </td>
-          <td style="text-align: center;">
+          <td style="text-align: center; <?= ($m['match_photo'] || $m['match_notes']) ? 'padding-bottom: 5px;' : '' ?>">
             <span class="badge" style="background: <?= $m['status'] === 'completed' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(255,255,255,0.05)' ?>; color: <?= $m['status'] === 'completed' ? '#22c55e' : 'var(--color-text-muted)' ?>; border: 1px solid <?= $m['status'] === 'completed' ? 'rgba(34, 197, 94, 0.2)' : 'var(--color-border)' ?>;">
               <?= strtoupper(e($m['status'])) ?>
             </span>
@@ -127,7 +127,7 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
         
         <?php if($m['match_photo'] || $m['match_notes']): ?>
         <tr class="documentation-row">
-          <td colspan="3" style="padding: 0 20px 20px 75px;">
+          <td colspan="3" style="padding: 0 20px 20px 75px; border-top: none;">
             <div style="background: var(--color-bg-light); border: 1px solid var(--color-border); border-radius: 12px; padding: 20px; display: flex; gap: 20px; flex-wrap: wrap;">
               <?php if($m['match_photo']): ?>
                 <div style="flex: 0 0 200px;">
