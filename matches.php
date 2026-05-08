@@ -143,10 +143,16 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
 
             </div>
           </td>
-          <td style="text-align: center; <?= ($m['match_photo'] || $m['match_notes']) ? 'padding-bottom: 5px;' : '' ?>">
-            <span class="badge" style="background: <?= $m['status'] === 'completed' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(255,255,255,0.05)' ?>; color: <?= $m['status'] === 'completed' ? '#22c55e' : 'var(--color-text-muted)' ?>; border: 1px solid <?= $m['status'] === 'completed' ? 'rgba(34, 197, 94, 0.2)' : 'var(--color-border)' ?>;">
-              <?= strtoupper(e($m['status'])) ?>
-            </span>
+          <td style="text-align: center; vertical-align: middle; <?= ($m['match_photo'] || $m['match_notes']) ? 'padding-bottom: 5px;' : '' ?>">
+            <?php if($m['status'] === 'completed'): ?>
+              <span class="badge" style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); padding: 6px 15px; border-radius: 30px; font-size: 11px; font-weight: 800; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 5px;">
+                <span style="font-size: 14px;">✓</span> COMPLETED
+              </span>
+            <?php else: ?>
+              <span class="badge" style="background: rgba(255, 255, 255, 0.05); color: var(--color-text-muted); border: 1px solid rgba(255, 255, 255, 0.1); padding: 6px 15px; border-radius: 30px; font-size: 11px; font-weight: 800; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 5px;">
+                <span style="font-size: 14px;">🕒</span> SCHEDULED
+              </span>
+            <?php endif; ?>
           </td>
         </tr>
         
