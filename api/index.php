@@ -21,13 +21,17 @@ require __DIR__ . '/../config/db.php';
 require __DIR__ . '/../includes/functions.php';
 
 // Parse the request
-$scriptName = $_SERVER['SCRIPT_NAME']; // e.g. /api/index.php or /fullsatu/api/index.php
-$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); // e.g. /api/seasons
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$scriptName = $_SERVER['SCRIPT_NAME']; // e.g. /api/index.php
+$basePath = dirname($scriptName); // e.g. /api
 
-$baseDir = dirname($scriptName); // e.g. /api
-if ($baseDir === '/' || $baseDir === '\\') $baseDir = '';
+// Remove basePath from requestUri
+if (strpos($requestUri, $basePath) === 0) {
+    $path = substr($requestUri, strlen($basePath));
+} else {
+    $path = $requestUri;
+}
 
-$path = substr($requestUri, strlen($baseDir));
 $path = trim($path, '/');
 $segments = $path ? explode('/', $path) : [];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -71,7 +75,7 @@ function generateApiToken() {
 
 try {
     // --- AUTH ---
-    if ($segments[0] === 'auth' && $method === 'POST') {
+    if (isset($segments[0]) && $segments[0] === 'auth' && $method === 'POST') {
         $body = getJsonBody();
         $user = $body['username'] ?? '';
         $pass = $body['password'] ?? '';
@@ -88,7 +92,7 @@ try {
     }
 
     // --- PLAYERS ---
-    elseif ($segments[0] === 'players') {
+    elseif (isset($segments[0]) && $segments[0] === 'players') {
         // GET /players - List all
         if ($method === 'GET' && count($segments) === 1) {
             $stmt = $pdo->query("SELECT * FROM players ORDER BY name ASC");
@@ -150,7 +154,7 @@ try {
     }
 
     // --- SEASONS ---
-    elseif ($segments[0] === 'seasons') {
+    elseif (isset($segments[0]) && $segments[0] === 'seasons') {
         // GET /seasons
         if ($method === 'GET' && count($segments) === 1) {
             get_seasons($pdo);
@@ -193,7 +197,7 @@ try {
     }
 
     // --- MATCHES ---
-    elseif ($segments[0] === 'matches') {
+    elseif (isset($segments[0]) && $segments[0] === 'matches') {
         // GET /matches/{id}
         if ($method === 'GET' && count($segments) === 2) {
             $id = (int)$segments[1];
@@ -245,7 +249,7 @@ try {
     }
 
     // --- RANKINGS ---
-    elseif ($segments[0] === 'rankings') {
+    elseif (isset($segments[0]) && $segments[0] === 'rankings') {
         if ($method === 'GET') {
             $stmt = $pdo->query("
                 SELECT p.*,
@@ -273,7 +277,7 @@ try {
     }
 
     // --- DASHBOARD (Admin) ---
-    elseif ($segments[0] === 'dashboard') {
+    elseif (isset($segments[0]) && $segments[0] === 'dashboard') {
         requireAuth();
         if ($method === 'GET') {
             $totalPlayers = $pdo->query("SELECT COUNT(*) FROM players")->fetchColumn();
@@ -297,6 +301,30 @@ try {
         jsonResponse(['error' => 'Endpoint not found', 'path' => $path], 404);
     }
 
+
 } catch (Exception $e) {
     jsonResponse(['error' => 'Server error: ' . $e->getMessage()], 500);
+}
+
+// ============================================================
+// HELPER FUNCTIONS
+// ============================================================
+
+function get_seasons($pdo) {
+    $stmt = $pdo->query("SELECT * FROM seasons ORDER BY created_at DESC");
+    jsonResponse(['seasons' => $stmt->fetchAll()]);
+}
+
+function create_season($pdo) {
+    requireAuth();
+    $body = getJsonBody();
+    $name = trim($body['name'] ?? '');
+    $format = $body['format'] ?? 'league';
+    $category = $body['category'] ?? 'single';
+    
+    if (!$name) jsonResponse(['error' => 'Name is required'], 400);
+    
+    $stmt = $pdo->prepare("INSERT INTO seasons (name, format, category, status) VALUES (?, ?, ?, 'active')");
+    $stmt->execute([$name, $format, $category]);
+    jsonResponse(['success' => true, 'id' => $pdo->lastInsertId()], 201);
 }
