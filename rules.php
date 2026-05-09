@@ -32,7 +32,7 @@ include 'includes/header.php';
 
     <h2 style="color: var(--color-primary); margin-bottom: 15px; font-size: 24px;">3. Klasemen & Poin</h2>
     <ul style="color: var(--color-text-main); margin-bottom: 30px; padding-left: 20px; line-height: 1.8;">
-      <li>Pemenang akan mendapatkan <strong>1 Poin (Pts)</strong> di klasemen. Pemain yang kalah tidak mendapatkan poin (0 Pts).</li>
+      <li>Pemenang akan mendapatkan <strong>2 Poin (Pts)</strong> di klasemen. Pemain yang kalah mendapatkan penalti <strong>-1 Poin (-1 Pts)</strong>.</li>
       <li>Peringkat klasemen ditentukan secara berurutan berdasarkan: Poin Tertinggi, Selisih Skor (Diff) Tertinggi, Skor Memasukkan (PF) Tertinggi, dan Alfabet nama.</li>
     </ul>
 

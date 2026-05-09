@@ -33,8 +33,8 @@ if (!$match) {
 $pageTitle = 'Detail Pertandingan - ' . e($match['player1']) . ' vs ' . e($match['player2']);
 
 // Dynamic Meta Tags for Sharing
-$ogTitle = "Hasil: " . $match['player1'] . " (" . ($match['player1_score'] ?? 0) . ") vs (" . ($match['player2_score'] ?? 0) . ") " . $match['player2'];
-$ogDescription = mb_strimwidth(strip_tags($match['match_notes']), 0, 160, "...");
+$ogTitle = "Match: " . $match['player1'] . " vs " . $match['player2'];
+$ogDescription = !empty($match['match_notes']) ? mb_strimwidth(strip_tags($match['match_notes']), 0, 100, "...") : "Lihat detail skor dan dokumentasi pertandingan FullSatu.";
 $ogImage = $match['match_photo'] ? base_url('assets/uploads/matches/'.$match['match_photo']) : base_url('assets/uploads/players/'.$match['photo1']);
 
 include 'includes/header.php';
@@ -52,7 +52,7 @@ include 'includes/header.php';
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <?php
             $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-            $shareText = "🔥 HASIL PERTANDINGAN SERU! 🔥\n\n" . $match['player1'] . " vs " . $match['player2'] . "\nSkor: " . ($match['player1_score'] ?? 0) . " - " . ($match['player2_score'] ?? 0) . "\n\nLihat dokumentasi lengkapnya di sini:\n" . $currentUrl;
+            $shareText = "🏆 HASIL MATCH 🏆\n\n" . $match['player1'] . " vs " . $match['player2'] . "\nSkor: " . ($match['player1_score'] ?? 0) . " - " . ($match['player2_score'] ?? 0) . "\n\nCek di sini:\n" . $currentUrl;
             
             $waLink = "https://wa.me/?text=" . urlencode($shareText);
             $fbLink = "https://www.facebook.com/sharer/sharer.php?u=" . urlencode($currentUrl);

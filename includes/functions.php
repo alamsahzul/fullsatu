@@ -25,6 +25,11 @@ function getCurrentHybridSeason($pdo) {
     return $stmt->fetch();
 }
 
+function getCurrentSeason($pdo) {
+    $stmt = $pdo->query("SELECT * FROM seasons ORDER BY id DESC LIMIT 1");
+    return $stmt->fetch();
+}
+
 function getAllLigaSeasons($pdo) {
     return $pdo->query("SELECT * FROM seasons WHERE LOWER(format) = 'league' ORDER BY id DESC")->fetchAll();
 }
@@ -65,6 +70,8 @@ function calculateStandings($pdo, $seasonId, $limitParticipantIds = null) {
     foreach ($participants as $p) {
         $table[$p['id']] = [
             'id' => $p['id'],
+            'p1_id' => $p['player_id'],
+            'p2_id' => $p['partner_id'],
             'name' => $p['p1_name'],
             'photo' => $p['photo1'],
             'name2' => $p['p2_name'],
@@ -112,12 +119,14 @@ function calculateStandings($pdo, $seasonId, $limitParticipantIds = null) {
 
         if ($m['winner_id'] == $m['player1_id']) {
             $table[$sp1_id]['w']++;
-            $table[$sp1_id]['pts']++;
+            $table[$sp1_id]['pts'] += 2; // Win +2
             $table[$sp2_id]['l']++;
+            $table[$sp2_id]['pts'] -= 1; // Loss -1
         } else {
             $table[$sp2_id]['w']++;
-            $table[$sp2_id]['pts']++;
+            $table[$sp2_id]['pts'] += 2; // Win +2
             $table[$sp1_id]['l']++;
+            $table[$sp1_id]['pts'] -= 1; // Loss -1
         }
     }
 

@@ -231,8 +231,12 @@ if ($season) {
                   <tr style="border-bottom: 1px solid rgba(255,255,255,0.03); background: <?= $lolos ? 'rgba(34, 197, 94, 0.03)' : 'transparent' ?>;">
                     <td style="padding: 12px 8px; font-weight: 800; color: var(--color-text-muted);"><?= $ri+1 ?></td>
                     <td style="padding: 12px 8px; font-weight: 700;">
-                      <div style="color: white;"><?= e($row['p1_name']) ?></div>
-                      <?php if($row['p2_name']): ?><div style="font-weight: 700;">& <?= e($row['p2_name']) ?></div><?php endif; ?>
+                          <div>
+                            <div style="font-weight: 700;"><a href="player?id=<?= $row['p1_id'] ?>" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($row['p1_name']) ?></a></div>
+                            <?php if(isset($row['p2_name']) && $row['p2_name']): ?>
+                              <div style="font-weight: 700;">& <a href="player?id=<?= $row['p2_id'] ?>" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($row['p2_name']) ?></a></div>
+                            <?php endif; ?>
+                          </div>
                     </td>
                     <td style="padding: 12px 8px; text-align: center;"><?= $row['played'] ?></td>
                     <td style="padding: 12px 8px; text-align: center; color: #4ade80;"><?= $row['wins'] ?></td>
@@ -296,10 +300,10 @@ if ($season) {
     
     <!-- TEAM 1 -->
     <div class="team-box" style="flex: 1; min-width: 150px; display: flex; align-items: center; gap: 12px; justify-content: flex-end; text-align: right;">
-                        <div>
-                          <div style="font-weight: 700; color: <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= e($m['player1']) ?></div>
-                          <?php if($m['partner1']): ?><div style="font-weight: 700;">& <?= e($m['partner1']) ?></div><?php endif; ?>
-                        </div>
+                                                  <div style="flex: 1; text-align: right;">
+                                      <div style="font-weight: 700;"><a href="player?id=<?= $m['player1_id'] ?>" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($m['player1']) ?></a></div>
+                                      <?php if($m['partner1']): ?><div style="font-size: 11px; color: var(--color-text-muted);">& <a href="player?id=<?= $m['p1_partner_id'] ?>" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($m['partner1']) ?></a></div><?php endif; ?>
+                                    </div>
                         <img src="<?= $m['photo1'] ? base_url('assets/uploads/players/'.$m['photo1']) : base_url('assets/img/player_avatar.png') ?>" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'var(--color-border)' ?>;">
                       </div>
 
@@ -321,10 +325,10 @@ if ($season) {
                       <!-- TEAM 2 -->
                       <div class="team-box" style="flex: 1; min-width: 150px; display: flex; align-items: center; gap: 12px; justify-content: flex-start; text-align: left;">
   <img src="<?= $m['photo2'] ? base_url('assets/uploads/players/'.$m['photo2']) : base_url('assets/img/player_avatar.png') ?>" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'var(--color-border)' ?>;">
-                        <div>
-                          <div style="font-weight: 700; color: <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= e($m['player2']) ?></div>
-                          <?php if($m['partner2']): ?><div style="font-weight: 700;">& <?= e($m['partner2']) ?></div><?php endif; ?>
-                        </div>
+                                                  <div style="flex: 1; text-align: left;">
+                                      <div style="font-weight: 700;"><a href="player?id=<?= $m['player2_id'] ?>" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($m['player2']) ?></a></div>
+                                      <?php if($m['partner2']): ?><div style="font-size: 11px; color: var(--color-text-muted);">& <a href="player?id=<?= $m['p2_partner_id'] ?>" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($m['partner2']) ?></a></div><?php endif; ?>
+                                    </div>
                       </div>
 
                     </div>
@@ -355,7 +359,7 @@ if ($season) {
                                         <?php 
                                             $fullBase = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
                                             $mUrl = $fullBase . base_url('match_detail?id='.$m['id']);
-                                            $mText = "🔥 HASIL PERTANDINGAN SERU! 🔥\n\n" . $m['player1'] . " vs " . $m['player2'] . "\nSkor: " . ($m['player1_score'] ?? 0) . " - " . ($m['player2_score'] ?? 0);
+                                            $mText = "🏆 HASIL MATCH 🏆\n\n" . $m['player1'] . " vs " . $m['player2'] . "\nSkor: " . ($m['player1_score'] ?? 0) . " - " . ($m['player2_score'] ?? 0);
                                             $mWa = "https://wa.me/?text=" . urlencode($mText . "\n\nCek di sini:\n" . $mUrl);
                                             $mFb = "https://www.facebook.com/sharer/sharer.php?u=" . urlencode($mUrl);
                                         ?>
@@ -414,16 +418,24 @@ if ($season) {
                   <div class="player-slot <?= ($b['winner_id'] && $b['winner_id'] == $b['player1_id'] && $b['player1_id']) ? 'winner' : '' ?> <?= ($roundName === 'Final') ? 'final-slot' : '' ?>">
                     <?php if($roundName === 'Final' && $b['winner_id'] && $b['winner_id'] == $b['player1_id']): ?><span class="trophy-icon">🏆</span><?php endif; ?>
                     <div class="name-box">
-                       <div class="name"><?= e($b['p1_name'] ?? ($b['player1_id'] ? 'Player 1' : 'TBD')) ?></div>
-                       <?php if($b['p1p_name']): ?><div class="partner-name">& <?= e($b['p1p_name']) ?></div><?php endif; ?>
+                        <div class="name">
+                          <a href="player?id=<?= $b['player1_id'] ?>" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($b['p1_name'] ?? 'TBD') ?></a>
+                          <?php if($b['p1p_name']): ?>
+                            <div class="partner-name">& <a href="player?id=<?= $b['p1_partner_id'] ?>" style="color: inherit; text-decoration: none; font-size: 11px;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($b['p1p_name']) ?></a></div>
+                          <?php endif; ?>
+                        </div>
                     </div>
                     <span class="score"><?= $b['player1_score'] ?? '-' ?></span>
                   </div>
                   <div class="player-slot <?= ($b['winner_id'] && $b['winner_id'] == $b['player2_id'] && $b['player2_id']) ? 'winner' : '' ?> <?= ($roundName === 'Final') ? 'final-slot' : '' ?>">
                     <?php if($roundName === 'Final' && $b['winner_id'] && $b['winner_id'] == $b['player2_id']): ?><span class="trophy-icon">🏆</span><?php endif; ?>
                     <div class="name-box">
-                       <div class="name"><?= e($b['p2_name'] ?? ($b['player2_id'] ? 'Player 2' : 'TBD')) ?></div>
-                       <?php if($b['p2p_name']): ?><div class="partner-name">& <?= e($b['p2p_name']) ?></div><?php endif; ?>
+                        <div class="name">
+                          <a href="player?id=<?= $b['player2_id'] ?>" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($b['p2_name'] ?? 'TBD') ?></a>
+                          <?php if($b['p2p_name']): ?>
+                            <div class="partner-name">& <a href="player?id=<?= $b['p2_partner_id'] ?>" style="color: inherit; text-decoration: none; font-size: 11px;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($b['p2p_name']) ?></a></div>
+                          <?php endif; ?>
+                        </div>
                     </div>
                     <span class="score"><?= $b['player2_score'] ?? '-' ?></span>
                   </div>

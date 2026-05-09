@@ -79,16 +79,24 @@ include 'includes/header.php';
                 <div class="player-slot <?= ($b['winner_id'] && $b['winner_id'] == $b['player1_id'] && $b['player1_id']) ? 'winner' : '' ?> <?= ($roundName === 'Final') ? 'final-slot' : '' ?>">
                   <?php if($roundName === 'Final' && $b['winner_id'] && $b['winner_id'] == $b['player1_id']): ?><span class="trophy-icon">🏆</span><?php endif; ?>
                   <div class="name-box">
-                     <div class="name"><?= e($b['p1_name'] ?? ($b['player1_id'] ? 'Player 1' : 'TBD')) ?></div>
-                     <?php if($b['p1p_name']): ?><div class="partner-name">& <?= e($b['p1p_name']) ?></div><?php endif; ?>
+                     <div class="name">
+                       <a href="player?id=<?= $b['player1_id'] ?>" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($b['p1_name'] ?? 'TBD') ?></a>
+                       <?php if($b['p1p_name']): ?>
+                         <div class="partner-name">& <a href="player?id=<?= $b['p1_partner_id'] ?>" style="color: inherit; text-decoration: none; font-size: 11px;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($b['p1p_name']) ?></a></div>
+                       <?php endif; ?>
+                     </div>
                   </div>
                   <span class="score"><?= $b['player1_score'] ?? '-' ?></span>
                 </div>
                 <div class="player-slot <?= ($b['winner_id'] && $b['winner_id'] == $b['player2_id'] && $b['player2_id']) ? 'winner' : '' ?> <?= ($roundName === 'Final') ? 'final-slot' : '' ?>">
                   <?php if($roundName === 'Final' && $b['winner_id'] && $b['winner_id'] == $b['player2_id']): ?><span class="trophy-icon">🏆</span><?php endif; ?>
                   <div class="name-box">
-                     <div class="name"><?= e($b['p2_name'] ?? ($b['player2_id'] ? 'Player 2' : 'TBD')) ?></div>
-                     <?php if($b['p2p_name']): ?><div class="partner-name">& <?= e($b['p2p_name']) ?></div><?php endif; ?>
+                     <div class="name">
+                       <a href="player?id=<?= $b['player2_id'] ?>" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($b['p2_name'] ?? 'TBD') ?></a>
+                       <?php if($b['p2p_name']): ?>
+                         <div class="partner-name">& <a href="player?id=<?= $b['p2_partner_id'] ?>" style="color: inherit; text-decoration: none; font-size: 11px;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($b['p2p_name']) ?></a></div>
+                       <?php endif; ?>
+                     </div>
                   </div>
                   <span class="score"><?= $b['player2_score'] ?? '-' ?></span>
                 </div>

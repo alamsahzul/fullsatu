@@ -4,6 +4,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title><?= e($pageTitle) ?></title>
   
   <!-- Open Graph Meta Tags -->
@@ -44,6 +47,7 @@
       <a href="<?= base_url('liga') ?>" class="<?= strpos($uri, 'liga') !== false ? 'active' : '' ?>">LIGA</a>
       <a href="<?= base_url('knockout') ?>" class="<?= strpos($uri, 'knockout') !== false ? 'active' : '' ?>">KNOCKOUT</a>
       <a href="<?= base_url('hybrid') ?>" class="<?= strpos($uri, 'hybrid') !== false ? 'active' : '' ?>">HYBRID</a>
+      <a href="<?= base_url('rank') ?>" class="<?= strpos($uri, 'rank') !== false ? 'active' : '' ?>">RANK</a>
       <a href="<?= base_url('rules') ?>" class="<?= strpos($uri, 'rules') !== false ? 'active' : '' ?>">RULES</a>
       <a href="<?= base_url('about') ?>" class="<?= strpos($uri, 'about') !== false ? 'active' : '' ?>">ABOUT</a>
     </nav>

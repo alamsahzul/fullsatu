@@ -140,12 +140,12 @@ include 'includes/header.php';
           <td style="padding: 15px 12px; border-bottom: 1px solid rgba(255,255,255,0.05);">
             <div style="display: flex; align-items: center; gap: 10px;">
                <div style="flex: 1; text-align: right;">
-                  <div style="font-weight: 700;"><?= e($m['p1_name']) ?></div>
+                  <div style="font-weight: 700;"><a href="../player?id=<?= $m['player1_id'] ?>" target="_blank" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($m['p1_name']) ?></a></div>
                   <?php if($m['p1_partner']): ?><div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($m['p1_partner']) ?></div><?php endif; ?>
                </div>
                <div style="color: var(--color-text-muted); font-size: 12px; font-weight: 800;">VS</div>
                <div style="flex: 1; text-align: left;">
-                  <div style="font-weight: 700;"><?= e($m['p2_name']) ?></div>
+                  <div style="font-weight: 700;"><a href="../player?id=<?= $m['player2_id'] ?>" target="_blank" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($m['p2_name']) ?></a></div>
                   <?php if($m['p2_partner']): ?><div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($m['p2_partner']) ?></div><?php endif; ?>
                </div>
             </div>

@@ -150,7 +150,7 @@ if ($season) {
               <tr>
                 <td style="color: var(--color-text-muted);"><?= $i + 1 ?></td>
                 <td>
-                  <a href="<?= base_url('player?id=' . $row['id']) ?>" style="display: flex; align-items: center; gap: 10px; color: white;">
+                  <a href="<?= base_url('player?id=' . $row['p1_id']) ?>" style="display: flex; align-items: center; gap: 10px; color: white;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='white'">
                     <?php if($row['photo']): ?>
                       <img src="<?= base_url('assets/uploads/players/' . $row['photo']) ?>" alt="<?= e($row['name']) ?>" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--color-border);">
                     <?php else: ?>
@@ -158,6 +158,11 @@ if ($season) {
                     <?php endif; ?>
                     <span style="font-weight: 600;"><?= e($row['name']) ?></span>
                   </a>
+                  <?php if(isset($row['p2_id']) && $row['p2_id']): ?>
+                    <div style="font-size: 10px; color: var(--color-text-muted); margin-left: 40px; margin-top: -5px;">
+                      & <a href="<?= base_url('player?id=' . $row['p2_id']) ?>" style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'"><?= e($row['name2']) ?></a>
+                    </div>
+                  <?php endif; ?>
                 </td>
                 <td class="num"><?= $row['main'] ?></td>
                 <td class="num"><?= $row['w'] ?></td>
