@@ -1,7 +1,7 @@
 <?php
 require 'config/db.php';
 require 'includes/functions.php';
-$allSeasons = getAllSeasons($pdo);
+$allSeasons = getAllLeagueSeasons($pdo);
 $selectedSeasonId = isset($_GET['season_id']) ? (int)$_GET['season_id'] : 0;
 
 // If no season selected or invalid, get current season
@@ -10,7 +10,7 @@ if ($selectedSeasonId > 0) {
     $stmt->execute([$selectedSeasonId]);
     $season = $stmt->fetch();
 } else {
-    $season = getCurrentSeason($pdo);
+    $season = getCurrentLeagueSeason($pdo);
     $selectedSeasonId = $season['id'] ?? 0;
 }
 
@@ -56,10 +56,17 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
   </div>
 
   <?php
-  $sql = "SELECT m.*, p1.name AS player1, p2.name AS player2, p1.photo AS photo1, p2.photo AS photo2, w.name AS winner 
+  $sql = "SELECT m.*, 
+          p1.name AS player1, p2.name AS player2, 
+          p1.photo AS photo1, p2.photo AS photo2,
+          p1p.name AS partner1, p2p.name AS partner2,
+          p1p.photo AS photo1p, p2p.photo AS photo2p,
+          w.name AS winner 
           FROM matches m 
           JOIN players p1 ON p1.id=m.player1_id 
           JOIN players p2 ON p2.id=m.player2_id 
+          LEFT JOIN players p1p ON p1p.id=m.p1_partner_id
+          LEFT JOIN players p2p ON p2p.id=m.p2_partner_id
           LEFT JOIN players w ON w.id=m.winner_id 
           WHERE m.season_id = ? ";
   
@@ -105,40 +112,48 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
           <td style="<?= ($m['match_photo'] || $m['match_notes']) ? 'padding-bottom: 5px;' : '' ?>">
             <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; padding: 10px 0;">
               
-              <!-- Player 1 -->
-              <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 150px; justify-content: flex-end;">
-                <a href="<?= base_url('player?id=' . $m['player1_id']) ?>" style="text-align: right; color: inherit;">
-                   <div style="<?= $m['winner_id'] == $m['player1_id'] ? 'color: var(--color-primary); font-weight: 700;' : 'color: white;' ?>"><?= e($m['player1']) ?></div>
+              <!-- Team 1 -->
+              <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 200px; justify-content: flex-end;">
+                <div style="text-align: right;">
+                   <a href="<?= base_url('player?id=' . $m['player1_id']) ?>" style="<?= $m['winner_id'] == $m['player1_id'] ? 'color: var(--color-primary); font-weight: 700;' : 'color: white;' ?>"><?= e($m['player1']) ?></a>
+                   <?php if($m['partner1']): ?>
+                     <div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($m['partner1']) ?></div>
+                   <?php endif; ?>
                    <?php if($m['status'] === 'completed'): ?>
                      <div style="font-size: 24px; font-weight: 900; color: var(--color-primary);"><?= e($m['player1_score']) ?></div>
                    <?php endif; ?>
-                </a>
-                <a href="<?= base_url('player?id=' . $m['player1_id']) ?>">
-                  <?php if($m['photo1']): ?>
-                    <img src="<?= base_url('assets/uploads/players/'.$m['photo1']) ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'transparent' ?>;">
-                  <?php else: ?>
-                    <img src="<?= base_url('assets/img/player_avatar.png') ?>" style="width: 45px; height: 45px; border-radius: 50%; opacity: 0.3;">
+                </div>
+                <div style="position: relative;">
+                  <a href="<?= base_url('player?id=' . $m['player1_id']) ?>">
+                    <img src="<?= $m['photo1'] ? base_url('assets/uploads/players/'.$m['photo1']) : base_url('assets/img/player_avatar.png') ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'transparent' ?>; <?= !$m['photo1'] ? 'opacity: 0.3;' : '' ?>">
+                  </a>
+                  <?php if($m['partner1']): ?>
+                    <img src="<?= $m['photo1p'] ? base_url('assets/uploads/players/'.$m['photo1p']) : base_url('assets/img/player_avatar.png') ?>" style="width: 25px; height: 25px; border-radius: 50%; object-fit: cover; border: 1px solid var(--color-border); position: absolute; bottom: -5px; right: -5px; background: var(--color-bg-dark); <?= !$m['photo1p'] ? 'opacity: 0.3;' : '' ?>">
                   <?php endif; ?>
-                </a>
+                </div>
               </div>
               
               <div style="color: var(--color-text-muted); font-size: 14px; font-weight: 900; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 8px;">VS</div>
               
-              <!-- Player 2 -->
-              <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 150px; justify-content: flex-start;">
-                <a href="<?= base_url('player?id=' . $m['player2_id']) ?>">
-                  <?php if($m['photo2']): ?>
-                    <img src="<?= base_url('assets/uploads/players/'.$m['photo2']) ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'transparent' ?>;">
-                  <?php else: ?>
-                    <img src="<?= base_url('assets/img/player_avatar.png') ?>" style="width: 45px; height: 45px; border-radius: 50%; opacity: 0.3;">
+              <!-- Team 2 -->
+              <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 200px; justify-content: flex-start;">
+                <div style="position: relative;">
+                  <a href="<?= base_url('player?id=' . $m['player2_id']) ?>">
+                    <img src="<?= $m['photo2'] ? base_url('assets/uploads/players/'.$m['photo2']) : base_url('assets/img/player_avatar.png') ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'transparent' ?>; <?= !$m['photo2'] ? 'opacity: 0.3;' : '' ?>">
+                  </a>
+                  <?php if($m['partner2']): ?>
+                    <img src="<?= $m['photo2p'] ? base_url('assets/uploads/players/'.$m['photo2p']) : base_url('assets/img/player_avatar.png') ?>" style="width: 25px; height: 25px; border-radius: 50%; object-fit: cover; border: 1px solid var(--color-border); position: absolute; bottom: -5px; left: -5px; background: var(--color-bg-dark); <?= !$m['photo2p'] ? 'opacity: 0.3;' : '' ?>">
                   <?php endif; ?>
-                </a>
-                <a href="<?= base_url('player?id=' . $m['player2_id']) ?>" style="text-align: left; color: inherit;">
-                   <div style="<?= $m['winner_id'] == $m['player2_id'] ? 'color: var(--color-primary); font-weight: 700;' : 'color: white;' ?>"><?= e($m['player2']) ?></div>
+                </div>
+                <div style="text-align: left;">
+                   <a href="<?= base_url('player?id=' . $m['player2_id']) ?>" style="<?= $m['winner_id'] == $m['player2_id'] ? 'color: var(--color-primary); font-weight: 700;' : 'color: white;' ?>"><?= e($m['player2']) ?></a>
+                   <?php if($m['partner2']): ?>
+                     <div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($m['partner2']) ?></div>
+                   <?php endif; ?>
                    <?php if($m['status'] === 'completed'): ?>
                      <div style="font-size: 24px; font-weight: 900; color: var(--color-primary);"><?= e($m['player2_score']) ?></div>
                    <?php endif; ?>
-                </a>
+                </div>
               </div>
 
             </div>

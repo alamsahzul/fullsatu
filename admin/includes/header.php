@@ -118,10 +118,7 @@ if (!isset($pageTitle)) $pageTitle = 'Admin Panel - FullSatu';
     <?php $uri = $_SERVER['REQUEST_URI']; ?>
     <a href="<?= base_url('admin/index') ?>" class="<?= strpos($uri, 'index') !== false || $uri == '/admin/' || $uri == '/fullsatu/admin/' ? 'active' : '' ?>">Dashboard</a>
     <a href="<?= base_url('admin/players') ?>" class="<?= strpos($uri, 'players') !== false ? 'active' : '' ?>">Master Pemain</a>
-    <a href="<?= base_url('admin/seasons') ?>" class="<?= strpos($uri, 'seasons') !== false ? 'active' : '' ?>">Musim (Season)</a>
-    <a href="<?= base_url('admin/season_players') ?>" class="<?= strpos($uri, 'season_players') !== false ? 'active' : '' ?>">Pemain Musim Ini</a>
-    <a href="<?= base_url('admin/generate') ?>" class="<?= strpos($uri, 'generate') !== false ? 'active' : '' ?>">Jadwal</a>
-    <a href="<?= base_url('admin/matches') ?>" class="<?= strpos($uri, 'matches') !== false ? 'active' : '' ?>">Input Skor</a>
+    <a href="<?= base_url('admin/seasons') ?>" class="<?= strpos($uri, 'seasons') !== false ? 'active' : '' ?>">Tournament</a>
     <a href="<?= base_url('') ?>" target="_blank" style="margin-top: 20px; color: var(--color-text-green);">Ke Website Utama</a>
     <a href="<?= base_url('admin/logout') ?>" style="color: #ef4444;">Logout</a>
   </nav>

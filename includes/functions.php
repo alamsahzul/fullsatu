@@ -10,60 +10,114 @@ function base_url($path = '') {
     return '/' . ltrim($path, '/');
 }
 
-function getCurrentSeason($pdo) {
-    $stmt = $pdo->query("SELECT * FROM seasons ORDER BY id DESC LIMIT 1");
+function getCurrentLigaSeason($pdo) {
+    $stmt = $pdo->query("SELECT * FROM seasons WHERE format = 'league' ORDER BY id DESC LIMIT 1");
     return $stmt->fetch();
 }
 
-function calculateStandings($pdo, $seasonId) {
-    $stmt = $pdo->prepare("SELECT p.id, p.name, p.photo FROM season_players sp JOIN players p ON p.id = sp.player_id WHERE sp.season_id = ? ORDER BY p.name ASC");
+function getCurrentKnockoutSeason($pdo) {
+    $stmt = $pdo->query("SELECT * FROM seasons WHERE format = 'cup' ORDER BY id DESC LIMIT 1");
+    return $stmt->fetch();
+}
+
+function getCurrentHybridSeason($pdo) {
+    $stmt = $pdo->query("SELECT * FROM seasons WHERE format = 'hybrid' ORDER BY id DESC LIMIT 1");
+    return $stmt->fetch();
+}
+
+function getAllLigaSeasons($pdo) {
+    return $pdo->query("SELECT * FROM seasons WHERE format = 'league' ORDER BY id DESC")->fetchAll();
+}
+
+function getAllKnockoutSeasons($pdo) {
+    return $pdo->query("SELECT * FROM seasons WHERE format = 'cup' ORDER BY id DESC")->fetchAll();
+}
+
+function getAllHybridSeasons($pdo) {
+    return $pdo->query("SELECT * FROM seasons WHERE format = 'hybrid' ORDER BY id DESC")->fetchAll();
+}
+
+function calculateStandings($pdo, $seasonId, $limitParticipantIds = null) {
+    // Get season info
+    $stmt = $pdo->prepare("SELECT format, category FROM seasons WHERE id = ?");
     $stmt->execute([$seasonId]);
-    $players = $stmt->fetchAll();
+    $season = $stmt->fetch();
+    $isDouble = ($season['category'] === 'double');
+
+    // Get participants
+    $sql = "SELECT sp.*, p1.name AS p1_name, p1.photo AS photo1, p2.name AS p2_name, p2.photo AS photo2 
+            FROM season_players sp 
+            JOIN players p1 ON p1.id = sp.player_id 
+            LEFT JOIN players p2 ON p2.id = sp.partner_id 
+            WHERE sp.season_id = ?";
+    $params = [$seasonId];
+    if ($limitParticipantIds !== null && !empty($limitParticipantIds)) {
+        $placeholders = implode(',', array_fill(0, count($limitParticipantIds), '?'));
+        $sql .= " AND sp.id IN ($placeholders)";
+        $params = array_merge($params, $limitParticipantIds);
+    }
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $participants = $stmt->fetchAll();
 
     $table = [];
-    foreach ($players as $p) {
+    foreach ($participants as $p) {
         $table[$p['id']] = [
             'id' => $p['id'],
-            'name' => $p['name'],
-            'photo' => $p['photo'],
-            'main' => 0,
-            'w' => 0,
-            'l' => 0,
-            'pf' => 0,
-            'pa' => 0,
-            'diff' => 0,
-            'pts' => 0,
+            'name' => $p['p1_name'],
+            'photo' => $p['photo1'],
+            'name2' => $p['p2_name'],
+            'photo2' => $p['photo2'],
+            'main' => 0, 'w' => 0, 'l' => 0, 'pf' => 0, 'pa' => 0, 'diff' => 0, 'pts' => 0,
         ];
     }
 
+    // Get completed matches
     $stmt = $pdo->prepare("SELECT * FROM matches WHERE season_id = ? AND status = 'completed'");
     $stmt->execute([$seasonId]);
     $matches = $stmt->fetchAll();
 
     foreach ($matches as $m) {
-        $p1 = $m['player1_id'];
-        $p2 = $m['player2_id'];
-        if (!isset($table[$p1]) || !isset($table[$p2])) continue;
+        // We need to find which Participant (sp_id) this match belongs to
+        // Match stores player1_id and p1_partner_id
+        // So we look for sp entry where (player_id=p1 AND partner_id=p1p) OR (player_id=p1p AND partner_id=p1)
+        
+        $sp1_id = null;
+        $sp2_id = null;
+        
+        foreach ($table as $sp_id => $row) {
+            // Find participant 1
+            $stmt_find = $pdo->prepare("SELECT id FROM season_players WHERE season_id=? AND player_id=? AND (partner_id=? OR (partner_id IS NULL AND ? IS NULL))");
+            $stmt_find->execute([$seasonId, $m['player1_id'], $m['p1_partner_id'], $m['p1_partner_id']]);
+            $sp1_id = $stmt_find->fetchColumn();
+
+            $stmt_find->execute([$seasonId, $m['player2_id'], $m['p2_partner_id'], $m['p2_partner_id']]);
+            $sp2_id = $stmt_find->fetchColumn();
+            break; // Found
+        }
+
+        if (!$sp1_id || !$sp2_id) continue;
+        if (!isset($table[$sp1_id]) || !isset($table[$sp2_id])) continue;
 
         $s1 = (int)$m['player1_score'];
         $s2 = (int)$m['player2_score'];
-        $winner = (int)$m['winner_id'];
 
-        $table[$p1]['main']++;
-        $table[$p2]['main']++;
-        $table[$p1]['pf'] += $s1;
-        $table[$p1]['pa'] += $s2;
-        $table[$p2]['pf'] += $s2;
-        $table[$p2]['pa'] += $s1;
+        $table[$sp1_id]['main']++;
+        $table[$sp2_id]['main']++;
+        $table[$sp1_id]['pf'] += $s1;
+        $table[$sp1_id]['pa'] += $s2;
+        $table[$sp2_id]['pf'] += $s2;
+        $table[$sp2_id]['pa'] += $s1;
 
-        if ($winner === $p1) {
-            $table[$p1]['w']++;
-            $table[$p1]['pts']++;
-            $table[$p2]['l']++;
-        } elseif ($winner === $p2) {
-            $table[$p2]['w']++;
-            $table[$p2]['pts']++;
-            $table[$p1]['l']++;
+        if ($m['winner_id'] == $m['player1_id']) {
+            $table[$sp1_id]['w']++;
+            $table[$sp1_id]['pts']++;
+            $table[$sp2_id]['l']++;
+        } else {
+            $table[$sp2_id]['w']++;
+            $table[$sp2_id]['pts']++;
+            $table[$sp1_id]['l']++;
         }
     }
 
@@ -200,7 +254,8 @@ function syncSeasonMatches($pdo, $seasonId) {
     return $newMatchesCount;
 }
 function getAllSeasons($pdo) {
-    $stmt = $pdo->query("SELECT * FROM seasons ORDER BY id DESC");
+    // Sort league/hybrid at the top, then newest first
+    $stmt = $pdo->query("SELECT * FROM seasons ORDER BY CASE WHEN format = 'cup' THEN 1 ELSE 0 END ASC, id DESC");
     return $stmt->fetchAll();
 }
 

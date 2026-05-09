@@ -1,7 +1,7 @@
 <?php
 require 'config/db.php';
 require 'includes/functions.php';
-$season = getCurrentSeason($pdo);
+$season = getCurrentLigaSeason($pdo);
 $pageTitle = 'FullSatu Single Man League';
 include 'includes/header.php';
 
@@ -44,8 +44,8 @@ if ($season) {
     <h2>SINGLE MAN LEAGUE</h2>
     <p>Liga pickleball single player pertama yang mengutamakan sportivitas, persaingan sehat, dan keseruan di setiap match.</p>
     <div class="hero-buttons">
-      <a href="<?= base_url('standings') ?>" class="btn btn-primary"><span class="icon-trophy">🏆</span> LIHAT KLASEMEN</a>
-      <a href="<?= base_url('matches') ?>" class="btn btn-outline"><span class="icon-calendar">📅</span> JADWAL MATCH</a>
+      <a href="<?= base_url('liga') ?>" class="btn btn-primary"><span class="icon-trophy">🏆</span> KLASEMEN LIGA</a>
+      <a href="<?= base_url('knockout') ?>" class="btn btn-outline"><span class="icon-calendar">📅</span> BAGAN KNOCKOUT</a>
     </div>
   </div>
   <div class="hero-image">
@@ -136,10 +136,10 @@ if ($season) {
             <tr>
               <th style="width: 40px;">#</th>
               <th>Player</th>
-              <th class="num">Matches</th>
-              <th class="num">W</th>
-              <th class="num">L</th>
-              <th class="num">Points</th>
+              <th class="num">M</th>
+              <th class="num">M</th>
+              <th class="num">K</th>
+              <th class="num">Poin</th>
             </tr>
           </thead>
           <tbody>
