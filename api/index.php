@@ -276,6 +276,46 @@ try {
         }
     }
 
+    // --- HOME (Public Dashboard) ---
+    elseif (isset($segments[0]) && $segments[0] === 'home') {
+        if ($method === 'GET') {
+            // Stats
+            $totalPlayers = $pdo->query("SELECT COUNT(*) FROM players")->fetchColumn();
+            $totalMatches = $pdo->query("SELECT COUNT(*) FROM matches WHERE status='completed'")->fetchColumn();
+            $totalSeasons = $pdo->query("SELECT COUNT(*) FROM seasons")->fetchColumn();
+            
+            // Latest Result
+            $stmt = $pdo->query("SELECT m.*, p1.name as p1_name, p2.name as p2_name, s.name as season_name 
+                                FROM matches m 
+                                JOIN players p1 ON m.player1_id = p1.id 
+                                JOIN players p2 ON m.player2_id = p2.id 
+                                JOIN seasons s ON m.season_id = s.id
+                                WHERE m.status='completed' 
+                                ORDER BY m.id DESC LIMIT 1");
+            $latestMatch = $stmt->fetch();
+
+            // Next Match
+            $stmt = $pdo->query("SELECT m.*, p1.name as p1_name, p2.name as p2_name, s.name as season_name 
+                                FROM matches m 
+                                JOIN players p1 ON m.player1_id = p1.id 
+                                JOIN players p2 ON m.player2_id = p2.id 
+                                JOIN seasons s ON m.season_id = s.id
+                                WHERE m.status='scheduled' 
+                                ORDER BY m.id ASC LIMIT 1");
+            $nextMatch = $stmt->fetch();
+
+            jsonResponse([
+                'stats' => [
+                    'players' => (int)$totalPlayers,
+                    'matches' => (int)$totalMatches,
+                    'seasons' => (int)$totalSeasons,
+                ],
+                'latest_match' => $latestMatch,
+                'next_match' => $nextMatch
+            ]);
+        }
+    }
+
     // --- DASHBOARD (Admin) ---
     elseif (isset($segments[0]) && $segments[0] === 'dashboard') {
         requireAuth();
