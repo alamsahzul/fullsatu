@@ -71,20 +71,29 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
           WHERE m.season_id = ? ";
   
   $params = [$season['id']];
-  if ($search && $search2) {
+  if ($search || $search2) {
       $sql .= " AND (
-          (p1.name LIKE ? AND p2.name LIKE ?) 
+          ( (p1.name LIKE ? OR p1p.name LIKE ?) AND (p2.name LIKE ? OR p2p.name LIKE ?) )
           OR 
-          (p1.name LIKE ? AND p2.name LIKE ?)
+          ( (p1.name LIKE ? OR p1p.name LIKE ?) AND (p2.name LIKE ? OR p2p.name LIKE ?) )
       ) ";
-      $params[] = "%$search%";
-      $params[] = "%$search2%";
-      $params[] = "%$search2%";
-      $params[] = "%$search%";
-  } elseif ($search) {
-      $sql .= " AND (p1.name LIKE ? OR p2.name LIKE ?) ";
-      $params[] = "%$search%";
-      $params[] = "%$search%";
+      
+      $s1 = "%$search%";
+      $s2 = "%$search2%";
+      
+      // If both search terms are present, we look for specific match
+      if ($search && $search2) {
+          $params[] = $s1; $params[] = $s1; $params[] = $s2; $params[] = $s2;
+          $params[] = $s2; $params[] = $s2; $params[] = $s1; $params[] = $s1;
+      } else {
+          // If only one is present, we look for that player/partner in any slot
+          $q = $search ?: $search2;
+          $sq = "%$q%";
+          // We modify the query slightly for single search to be simpler or just fill params
+          // Actually we can keep the same SQL and just repeat the params
+          $params[] = $sq; $params[] = $sq; $params[] = "%%"; $params[] = "%%";
+          $params[] = "%%"; $params[] = "%%"; $params[] = $sq; $params[] = $sq;
+      }
   }
   
   // Show 'completed' matches first, then 'scheduled'
@@ -117,7 +126,7 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
                 <div style="text-align: right;">
                    <a href="<?= base_url('player?id=' . $m['player1_id']) ?>" style="<?= $m['winner_id'] == $m['player1_id'] ? 'color: var(--color-primary); font-weight: 700;' : 'color: white;' ?>"><?= e($m['player1']) ?></a>
                    <?php if($m['partner1']): ?>
-                     <div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($m['partner1']) ?></div>
+                     <div style="font-weight: 700;">& <?= e($m['partner1']) ?></div>
                    <?php endif; ?>
                    <?php if($m['status'] === 'completed'): ?>
                      <div style="font-size: 24px; font-weight: 900; color: var(--color-primary);"><?= e($m['player1_score']) ?></div>
@@ -148,7 +157,7 @@ $search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
                 <div style="text-align: left;">
                    <a href="<?= base_url('player?id=' . $m['player2_id']) ?>" style="<?= $m['winner_id'] == $m['player2_id'] ? 'color: var(--color-primary); font-weight: 700;' : 'color: white;' ?>"><?= e($m['player2']) ?></a>
                    <?php if($m['partner2']): ?>
-                     <div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($m['partner2']) ?></div>
+                     <div style="font-weight: 700;">& <?= e($m['partner2']) ?></div>
                    <?php endif; ?>
                    <?php if($m['status'] === 'completed'): ?>
                      <div style="font-size: 24px; font-weight: 900; color: var(--color-primary);"><?= e($m['player2_score']) ?></div>

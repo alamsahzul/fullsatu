@@ -32,7 +32,7 @@ yarn-error.log
 /config/
 
 # Uploads or cache
-/uploads/
+assets/uploads/
 /cache/
 
 # [Wl^FARvS[+q@(;x

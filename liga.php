@@ -16,9 +16,6 @@ if ($selectedSeasonId > 0) {
 $pageTitle = 'Liga - Klasemen';
 include 'includes/header.php';
 ?>
-$pageTitle = 'Liga - Klasemen';
-include 'includes/header.php';
-?>
 <style>
     @media (max-width: 768px) {
         .tab-container {
@@ -109,6 +106,21 @@ include 'includes/header.php';
         .detail-footer {
             justify-content: center !important;
             width: 100% !important;
+        }
+        .match-main-flex {
+            gap: 10px !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            flex-direction: column !important;
+        }
+        .team-box {
+            justify-content: center !important;
+            text-align: center !important;
+            width: 100% !important;
+            flex-direction: column !important;
+        }
+        .team-box div {
+            text-align: center !important;
         }
     }
 </style>
@@ -204,7 +216,7 @@ include 'includes/header.php';
                           <div>
                             <div style="font-weight: 700;"><?= e($row['name']) ?></div>
                             <?php if(isset($row['name2']) && $row['name2']): ?>
-                              <div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($row['name2']) ?></div>
+                              <div style="font-weight: 700;">& <?= e($row['name2']) ?></div>
                             <?php endif; ?>
                           </div>
                         </div>
@@ -255,32 +267,34 @@ include 'includes/header.php';
           <div style="background: var(--color-bg-light); padding: 15px 25px; border-radius: 12px 12px 0 0; border: 1px solid rgba(255,255,255,0.05); border-bottom: none;">
             <h2 style="margin: 0; font-size: 18px; letter-spacing: 1px; color: var(--color-primary);">📅 JADWAL & HASIL LIGA</h2>
           </div>
-          <div class="card" style="border-radius: 0 0 12px 12px; border: 1px solid rgba(255,255,255,0.05); padding: 0;">
-            <div class="table-wrap" style="border: none; border-radius: 0;">
-              <table id="matchesTable">
-                <tbody id="matchesTableBody">
+          <div class="card" style="background: transparent; border: none; box-shadow: none; padding: 0; margin-bottom: 40px;">
+          <div class="table-wrap" style="border: none; border-radius: 0; background: transparent;">
+            <table id="matchesTable" style="width: 100%; border-collapse: separate; border-spacing: 0 12px;">
+              <tbody id="matchesTableBody">
                   <?php if(empty($matches)): ?>
                     <tr><td colspan="3" style="text-align: center; padding: 40px; color: var(--color-text-muted);">Belum ada jadwal pertandingan.</td></tr>
                   <?php else: ?>
                     <?php foreach($matches as $index => $m): ?>
-                    <tr class="match-row <?= ($index >= $limitInitial) ? 'hidden-match' : '' ?> <?= ($m['match_photo'] || $m['match_notes']) ? 'has-detail' : '' ?>" 
-                        data-team1="<?= strtolower(e($m['player1'] . ' ' . $m['partner1'])) ?>" 
-                        data-team2="<?= strtolower(e($m['player2'] . ' ' . $m['partner2'])) ?>"
-                        style="<?= ($index >= $limitInitial) ? 'display: none;' : '' ?> <?= ($m['match_photo'] || $m['match_notes']) ? 'cursor: pointer;' : '' ?>"
-                        <?= ($m['match_photo'] || $m['match_notes']) ? 'onclick="toggleDetail(\'m-'.$m['id'].'\')"' : '' ?>>
+                      <tr class="match-row <?= ($index >= $limitInitial) ? 'hidden-match' : '' ?> <?= ($m['match_photo'] || $m['match_notes']) ? 'has-detail' : '' ?>" 
+                          data-team1="<?= strtolower(e($m['player1'] . ' ' . $m['partner1'])) ?>" 
+                          data-team2="<?= strtolower(e($m['player2'] . ' ' . $m['partner2'])) ?>"
+                          style="<?= ($index >= $limitInitial) ? 'display: none;' : '' ?> <?= ($m['match_photo'] || $m['match_notes']) ? 'cursor: pointer;' : '' ?> background: var(--color-bg-light); border: 1px solid rgba(255,255,255,0.05);"
+                          <?= ($m['match_photo'] || $m['match_notes']) ? 'onclick="toggleDetail(\'m-'.$m['id'].'\')"' : '' ?>
+                          onmouseover="this.style.filter='brightness(1.2)'" 
+                          onmouseout="this.style.filter='none'">
                       <td style="padding: 20px;">
-                        <div class="match-main-flex" style="display: flex; align-items: center; gap: 20px; justify-content: space-between; flex-wrap: wrap;">
+                        <div class="match-main-flex" style="display: flex; align-items: center; gap: 15px; justify-content: space-between; flex-wrap: wrap;">
                           
                           <div class="team-box" style="flex: 1; min-width: 150px; display: flex; align-items: center; gap: 12px; justify-content: flex-end; text-align: right;">
                             <div>
                               <div style="font-weight: 700; color: <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= e($m['player1']) ?></div>
-                              <?php if($m['partner1']): ?><div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($m['partner1']) ?></div><?php endif; ?>
+                              <?php if($m['partner1']): ?><div style="font-weight: 700;">& <?= e($m['partner1']) ?></div><?php endif; ?>
                             </div>
                             <img src="<?= $m['photo1'] ? base_url('assets/uploads/players/'.$m['photo1']) : base_url('assets/img/player_avatar.png') ?>" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'var(--color-border)' ?>;">
                           </div>
 
                           <div class="score-box" style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
-                            <div style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); padding: 8px 15px; border-radius: 8px;">
+                            <div style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 8px;">
                                 <div style="font-size: 20px; font-weight: 900; color: <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= $m['status'] === 'completed' ? $m['player1_score'] : '-' ?></div>
                                 <div style="font-size: 12px; color: var(--color-text-muted);">VS</div>
                                 <div style="font-size: 20px; font-weight: 900; color: <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= $m['status'] === 'completed' ? $m['player2_score'] : '-' ?></div>
@@ -297,7 +311,7 @@ include 'includes/header.php';
                             <img src="<?= $m['photo2'] ? base_url('assets/uploads/players/'.$m['photo2']) : base_url('assets/img/player_avatar.png') ?>" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'var(--color-border)' ?>;">
                             <div>
                               <div style="font-weight: 700; color: <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= e($m['player2']) ?></div>
-                              <?php if($m['partner2']): ?><div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($m['partner2']) ?></div><?php endif; ?>
+                              <?php if($m['partner2']): ?><div style="font-weight: 700;">& <?= e($m['partner2']) ?></div><?php endif; ?>
                             </div>
                           </div>
                         </div>

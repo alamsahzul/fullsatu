@@ -106,15 +106,15 @@ include 'includes/header.php';
 <style>
   .bracket-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: stretch;
     padding: 40px 0;
     overflow-x: auto;
-    gap: 20px;
+    gap: 30px;
   }
   .bracket-round {
-    flex: 1;
-    min-width: 250px;
+    flex: none;
+    width: 170px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -152,19 +152,19 @@ include 'includes/header.php';
   }
   .player-slot:last-child { border-bottom: none; }
   .player-slot.winner { background: rgba(34, 197, 94, 0.05); }
-  .player-slot.winner .name { color: var(--color-primary); font-weight: 700; }
+  .player-slot.winner .name, .player-slot.winner .partner-name { color: var(--color-primary); font-weight: 700; }
   .player-slot.winner .score { color: var(--color-primary); font-weight: 900; }
   
   .name-box { flex: 1; display: flex; flex-direction: column; }
-  .name { font-size: 14px; color: white; }
-  .partner-name { font-size: 10px; color: var(--color-text-muted); }
+  .name, .partner-name { font-size: 14px; color: white; }
+  .partner-name { margin-top: 0px; }
   .score { font-size: 16px; font-weight: 700; color: var(--color-text-muted); }
 
   /* FINAL STYLING */
   .bracket-match-item.final { border: 2px solid #facc15; box-shadow: 0 0 30px rgba(250, 204, 21, 0.2); }
-  .final-slot { padding: 20px; }
-  .final-slot .name { font-size: 18px; font-weight: 900; }
-  .trophy-icon { margin-right: 10px; font-size: 20px; }
+  .final-slot { padding: 12px 15px; }
+  .final-slot .name { font-size: 14px; font-weight: 700; }
+  .trophy-icon { margin-right: 8px; font-size: 16px; }
   .final-glow {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -173,8 +173,19 @@ include 'includes/header.php';
   }
 
   @media (max-width: 768px) {
-    .bracket-container { flex-direction: column; align-items: center; }
-    .bracket-round { width: 100%; margin-bottom: 50px; }
+    .bracket-container { 
+      flex-direction: row !important; 
+      overflow-x: auto !important; 
+      padding-bottom: 20px;
+      -webkit-overflow-scrolling: touch;
+      display: flex !important;
+      justify-content: flex-start !important;
+      gap: 10px !important;
+    }
+    .bracket-round { 
+      width: 170px !important; 
+      flex-shrink: 0;
+    }
   }
 </style>
 

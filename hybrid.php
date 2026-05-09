@@ -141,6 +141,21 @@ if ($season) {
             justify-content: center !important;
             width: 100% !important;
         }
+        .match-main-flex {
+            gap: 10px !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            flex-direction: column !important;
+        }
+        .team-box {
+            justify-content: center !important;
+            text-align: center !important;
+            width: 100% !important;
+            flex-direction: column !important;
+        }
+        .team-box div {
+            text-align: center !important;
+        }
     }
 </style>
 
@@ -217,7 +232,7 @@ if ($season) {
                     <td style="padding: 12px 8px; font-weight: 800; color: var(--color-text-muted);"><?= $ri+1 ?></td>
                     <td style="padding: 12px 8px; font-weight: 700;">
                       <div style="color: white;"><?= e($row['p1_name']) ?></div>
-                      <?php if($row['p2_name']): ?><div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($row['p2_name']) ?></div><?php endif; ?>
+                      <?php if($row['p2_name']): ?><div style="font-weight: 700;">& <?= e($row['p2_name']) ?></div><?php endif; ?>
                     </td>
                     <td style="padding: 12px 8px; text-align: center;"><?= $row['played'] ?></td>
                     <td style="padding: 12px 8px; text-align: center; color: #4ade80;"><?= $row['wins'] ?></td>
@@ -261,36 +276,39 @@ if ($season) {
             <input type="text" id="matchSearch2" placeholder="Pemain 2..." onkeyup="searchMatches()" style="width: 180px; background: rgba(0,0,0,0.2); border: 1px solid var(--color-border); color: white; padding: 10px 20px; border-radius: 30px; outline: none; font-size: 14px;">
           </div>
 
-        <div style="background: var(--color-bg-light); padding: 15px 25px; border-radius: 12px 12px 0 0; border: 1px solid rgba(255,255,255,0.05); border-bottom: none;">
+        <div style="background: var(--color-bg-light); padding: 15px 25px; border-radius: 12px 12px 0 0; border: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid var(--color-border);">
           <h2 style="margin: 0; font-size: 18px; letter-spacing: 1px; color: var(--color-primary);">📅 HASIL PERTANDINGAN GRUP</h2>
         </div>
-        <div class="card" style="border-radius: 0 0 12px 12px; border: 1px solid rgba(255,255,255,0.05); padding: 0; margin-bottom: 40px;">
-          <div class="table-wrap" style="border: none; border-radius: 0;">
-                   <tbody>
+        <div class="card" style="background: transparent; border: none; box-shadow: none; padding: 0; margin-bottom: 40px;">
+          <div class="table-wrap" style="border: none; border-radius: 0; background: transparent;">
+            <table id="matchesTable" style="width: 100%; border-collapse: separate; border-spacing: 0 12px;">
+              <tbody>
                 <?php foreach($groupMatches as $index => $m): ?>
                 <tr class="match-row <?= ($index >= $limitInitial) ? 'hidden-match' : '' ?> <?= ($m['match_photo'] || $m['match_notes']) ? 'has-detail' : '' ?>" 
                     data-team1="<?= strtolower(e($m['player1'] . ' ' . $m['partner1'])) ?>" 
                     data-team2="<?= strtolower(e($m['player2'] . ' ' . $m['partner2'])) ?>"
-                    style="<?= ($index >= $limitInitial) ? 'display: none;' : '' ?> <?= ($m['match_photo'] || $m['match_notes']) ? 'cursor: pointer;' : '' ?>"
-                    <?= ($m['match_photo'] || $m['match_notes']) ? 'onclick="toggleDetail(\'h-'.$m['id'].'\')"' : '' ?>>
-                  <td style="padding: 15px 25px;">
-                    <div class="match-main-flex" style="display: flex; align-items: center; gap: 20px; justify-content: space-between; flex-wrap: wrap;">
-                      
-                      <!-- TEAM 1 -->
-                      <div class="team-box" style="flex: 1; display: flex; align-items: center; gap: 12px; justify-content: flex-end; text-align: right;">
+                    style="<?= ($index >= $limitInitial) ? 'display: none;' : '' ?> <?= ($m['match_photo'] || $m['match_notes']) ? 'cursor: pointer;' : '' ?> background: var(--color-bg-light); border: 1px solid rgba(255,255,255,0.05);"
+                    <?= ($m['match_photo'] || $m['match_notes']) ? 'onclick="toggleDetail(\'h-'.$m['id'].'\')"' : '' ?>
+                    onmouseover="this.style.filter='brightness(1.2)'" 
+                    onmouseout="this.style.filter='none'">
+                  <td style="padding: 20px;">
+  <div class="match-main-flex" style="display: flex; align-items: center; gap: 15px; justify-content: space-between; flex-wrap: wrap;">
+    
+    <!-- TEAM 1 -->
+    <div class="team-box" style="flex: 1; min-width: 150px; display: flex; align-items: center; gap: 12px; justify-content: flex-end; text-align: right;">
                         <div>
                           <div style="font-weight: 700; color: <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= e($m['player1']) ?></div>
-                          <?php if($m['partner1']): ?><div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($m['partner1']) ?></div><?php endif; ?>
+                          <?php if($m['partner1']): ?><div style="font-weight: 700;">& <?= e($m['partner1']) ?></div><?php endif; ?>
                         </div>
-                        <img src="<?= $m['photo1'] ? base_url('assets/uploads/players/'.$m['photo1']) : base_url('assets/img/player_avatar.png') ?>" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'var(--color-border)' ?>;">
+                        <img src="<?= $m['photo1'] ? base_url('assets/uploads/players/'.$m['photo1']) : base_url('assets/img/player_avatar.png') ?>" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'var(--color-border)' ?>;">
                       </div>
 
                       <!-- SCORE & DETAIL -->
-                      <div class="score-box" style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
-                        <div style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 8px;">
-                            <div style="font-size: 18px; font-weight: 900; color: <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= $m['status'] === 'completed' ? $m['player1_score'] : '-' ?></div>
-                            <div style="font-size: 10px; color: var(--color-text-muted);">VS</div>
-                            <div style="font-size: 18px; font-weight: 900; color: <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= $m['status'] === 'completed' ? $m['player2_score'] : '-' ?></div>
+                      <div class="score-box" style="text-align: center; min-width: 80px;">
+                        <div style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 8px; justify-content: center;">
+                            <div style="font-size: 20px; font-weight: 900; color: <?= $m['winner_id'] == $m['player1_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= $m['status'] === 'completed' ? $m['player1_score'] : '-' ?></div>
+                            <span style="font-size: 10px; color: var(--color-text-muted); font-weight: 900;">VS</span>
+                            <div style="font-size: 20px; font-weight: 900; color: <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= $m['status'] === 'completed' ? $m['player2_score'] : '-' ?></div>
                         </div>
                         <?php if($m['match_photo'] || $m['match_notes']): ?>
                             <div class="quick-view-btn" style="font-size: 8px; color: #000; background: var(--color-primary); font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 10px; margin-top: 2px; box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3);">
@@ -301,11 +319,11 @@ if ($season) {
                       </div>
 
                       <!-- TEAM 2 -->
-                      <div class="team-box" style="flex: 1; display: flex; align-items: center; gap: 12px; justify-content: flex-start; text-align: left;">
-                        <img src="<?= $m['photo2'] ? base_url('assets/uploads/players/'.$m['photo2']) : base_url('assets/img/player_avatar.png') ?>" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'var(--color-border)' ?>;">
+                      <div class="team-box" style="flex: 1; min-width: 150px; display: flex; align-items: center; gap: 12px; justify-content: flex-start; text-align: left;">
+  <img src="<?= $m['photo2'] ? base_url('assets/uploads/players/'.$m['photo2']) : base_url('assets/img/player_avatar.png') ?>" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'var(--color-border)' ?>;">
                         <div>
                           <div style="font-weight: 700; color: <?= $m['winner_id'] == $m['player2_id'] ? 'var(--color-primary)' : 'white' ?>;"><?= e($m['player2']) ?></div>
-                          <?php if($m['partner2']): ?><div style="font-size: 11px; color: var(--color-text-muted);">& <?= e($m['partner2']) ?></div><?php endif; ?>
+                          <?php if($m['partner2']): ?><div style="font-weight: 700;">& <?= e($m['partner2']) ?></div><?php endif; ?>
                         </div>
                       </div>
 
@@ -503,15 +521,15 @@ function loadMoreMatches() {
 <style>
   .bracket-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: stretch;
     padding: 40px 0;
     overflow-x: auto;
-    gap: 20px;
+    gap: 30px;
   }
   .bracket-round {
-    flex: 1;
-    min-width: 250px;
+    flex: none;
+    width: 170px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -553,15 +571,15 @@ function loadMoreMatches() {
   .player-slot.winner .score { color: var(--color-primary); font-weight: 900; }
   
   .name-box { flex: 1; display: flex; flex-direction: column; }
-  .name { font-size: 14px; color: white; }
-  .partner-name { font-size: 10px; color: var(--color-text-muted); }
+  .name { font-size: 14px; color: white; font-weight: 700; }
+  .partner-name { font-size: 14px; color: var(--color-text-muted); font-weight: 700; }
   .score { font-size: 16px; font-weight: 700; color: var(--color-text-muted); }
 
   /* FINAL STYLING */
   .bracket-match-item.final { border: 2px solid #facc15; box-shadow: 0 0 30px rgba(250, 204, 21, 0.2); }
-  .final-slot { padding: 20px; }
-  .final-slot .name { font-size: 18px; font-weight: 900; }
-  .trophy-icon { margin-right: 10px; font-size: 20px; }
+  .final-slot { padding: 12px 15px; }
+  .final-slot .name { font-size: 14px; font-weight: 700; }
+  .trophy-icon { margin-right: 8px; font-size: 16px; }
   .final-glow {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -570,8 +588,19 @@ function loadMoreMatches() {
   }
 
   @media (max-width: 768px) {
-    .bracket-container { flex-direction: column; align-items: center; }
-    .bracket-round { width: 100%; margin-bottom: 50px; }
+    .bracket-container { 
+      flex-direction: row !important; 
+      overflow-x: auto !important; 
+      padding-bottom: 20px;
+      -webkit-overflow-scrolling: touch;
+      display: flex !important;
+      justify-content: flex-start !important;
+      gap: 10px !important;
+    }
+    .bracket-round { 
+      width: 170px !important; 
+      flex-shrink: 0;
+    }
   }
 </style>
 

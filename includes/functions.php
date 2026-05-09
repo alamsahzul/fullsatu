@@ -26,15 +26,15 @@ function getCurrentHybridSeason($pdo) {
 }
 
 function getAllLigaSeasons($pdo) {
-    return $pdo->query("SELECT * FROM seasons WHERE format = 'league' ORDER BY id DESC")->fetchAll();
+    return $pdo->query("SELECT * FROM seasons WHERE LOWER(format) = 'league' ORDER BY id DESC")->fetchAll();
 }
 
 function getAllKnockoutSeasons($pdo) {
-    return $pdo->query("SELECT * FROM seasons WHERE format = 'cup' ORDER BY id DESC")->fetchAll();
+    return $pdo->query("SELECT * FROM seasons WHERE LOWER(format) = 'cup' ORDER BY id DESC")->fetchAll();
 }
 
 function getAllHybridSeasons($pdo) {
-    return $pdo->query("SELECT * FROM seasons WHERE format = 'hybrid' ORDER BY id DESC")->fetchAll();
+    return $pdo->query("SELECT * FROM seasons WHERE LOWER(format) = 'hybrid' ORDER BY id DESC")->fetchAll();
 }
 
 function calculateStandings($pdo, $seasonId, $limitParticipantIds = null) {

@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $search = isset($_GET['q']) ? trim($_GET['q']) : '';
+$search2 = isset($_GET['q2']) ? trim($_GET['q2']) : '';
 
 // Complex query to get team names and partner info for matches
 $sql = "SELECT m.*, 
@@ -54,12 +55,25 @@ $sql = "SELECT m.*,
         WHERE m.season_id = ?";
 $params = [$seasonId];
 
-if ($search) {
-    $sql .= " AND (p1a.name LIKE ? OR p1b.name LIKE ? OR p2a.name LIKE ? OR p2b.name LIKE ?)";
-    $params[] = "%$search%";
-    $params[] = "%$search%";
-    $params[] = "%$search%";
-    $params[] = "%$search%";
+if ($search || $search2) {
+    $sql .= " AND (
+        ( (p1a.name LIKE ? OR p1b.name LIKE ?) AND (p2a.name LIKE ? OR p2b.name LIKE ?) )
+        OR 
+        ( (p1a.name LIKE ? OR p1b.name LIKE ?) AND (p2a.name LIKE ? OR p2b.name LIKE ?) )
+    ) ";
+    
+    $s1 = "%$search%";
+    $s2 = "%$search2%";
+    
+    if ($search && $search2) {
+        $params[] = $s1; $params[] = $s1; $params[] = $s2; $params[] = $s2;
+        $params[] = $s2; $params[] = $s2; $params[] = $s1; $params[] = $s1;
+    } else {
+        $q = $search ?: $search2;
+        $sq = "%$q%";
+        $params[] = $sq; $params[] = $sq; $params[] = "%%"; $params[] = "%%";
+        $params[] = "%%"; $params[] = "%%"; $params[] = $sq; $params[] = $sq;
+    }
 }
 
 $sql .= " ORDER BY m.group_name, m.id";
@@ -95,11 +109,13 @@ include 'includes/header.php';
 <?php endif; ?>
 
 <div class="admin-card" style="margin-bottom: 30px;">
-    <form method="get" style="display: flex; gap: 10px; align-items: center;">
+    <form method="get" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
       <input type="hidden" name="season_id" value="<?= $seasonId ?>">
-      <input type="text" name="q" value="<?= e($search) ?>" placeholder="Cari nama pemain/tim..." style="flex: 1; background: var(--color-bg-dark); border: 1px solid var(--color-border); color: white; padding: 10px 15px; border-radius: 8px;">
+      <input type="text" name="q" value="<?= e($search) ?>" placeholder="Pemain 1..." style="flex: 1; min-width: 150px; background: var(--color-bg-dark); border: 1px solid var(--color-border); color: white; padding: 10px 15px; border-radius: 8px;">
+      <div style="font-weight: 900; color: var(--color-text-muted); font-size: 12px;">VS</div>
+      <input type="text" name="q2" value="<?= e($search2) ?>" placeholder="Pemain 2..." style="flex: 1; min-width: 150px; background: var(--color-bg-dark); border: 1px solid var(--color-border); color: white; padding: 10px 15px; border-radius: 8px;">
       <button class="btn btn-primary">Cari Match</button>
-      <?php if($search): ?><a href="matches?season_id=<?= $seasonId ?>" class="btn btn-outline">Reset</a><?php endif; ?>
+      <?php if($search || $search2): ?><a href="matches?season_id=<?= $seasonId ?>" class="btn btn-outline">Reset</a><?php endif; ?>
     </form>
 </div>
 
