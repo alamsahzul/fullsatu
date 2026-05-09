@@ -91,10 +91,21 @@ include 'includes/header.php';
             <div style="display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap;">
                 <!-- TEAM 1 -->
                 <div style="flex: 1; min-width: 200px;">
-                    <div style="position: relative; display: inline-block; margin-bottom: 20px;">
-                        <img src="<?= $match['photo1'] ? base_url('assets/uploads/players/'.$match['photo1']) : base_url('assets/img/player_avatar.png') ?>" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid <?= $match['winner_id'] == $match['player1_id'] ? 'var(--color-primary)' : 'rgba(255,255,255,0.1)' ?>; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <div style="position: relative; display: inline-block; margin-bottom: 25px; width: 160px; height: 110px;">
+                        <!-- Partner 1 Photo (Back) -->
+                        <?php if($match['partner1']): ?>
+                        <div style="position: absolute; right: 0; top: 5px; z-index: 1;">
+                             <img src="<?= $match['photo1p'] ? base_url('assets/uploads/players/'.$match['photo1p']) : base_url('assets/img/player_avatar.png') ?>" style="width: 95px; height: 95px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 10px 20px rgba(0,0,0,0.4);">
+                        </div>
+                        <?php endif; ?>
+
+                        <!-- Player 1 Photo (Front) -->
+                        <div style="position: absolute; left: 0; top: 0; z-index: 2;">
+                             <img src="<?= $match['photo1'] ? base_url('assets/uploads/players/'.$match['photo1']) : base_url('assets/img/player_avatar.png') ?>" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid <?= $match['winner_id'] == $match['player1_id'] ? 'var(--color-primary)' : 'white' ?>; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: var(--color-bg-light);">
+                        </div>
+
                         <?php if($match['winner_id'] == $match['player1_id']): ?>
-                            <div style="position: absolute; bottom: -5px; right: -5px; background: var(--color-primary); color: #000; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 3px solid #1a1a1a;">🏆</div>
+                            <div style="position: absolute; bottom: 5px; left: 65px; background: var(--color-primary); color: #000; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 3px solid #1a1a1a; z-index: 5;">🏆</div>
                         <?php endif; ?>
                     </div>
                     <h2 style="margin: 0; font-size: 24px; font-weight: 900; color: white;"><?= e($match['player1']) ?></h2>
@@ -112,10 +123,21 @@ include 'includes/header.php';
 
                 <!-- TEAM 2 -->
                 <div style="flex: 1; min-width: 200px;">
-                    <div style="position: relative; display: inline-block; margin-bottom: 20px;">
-                        <img src="<?= $match['photo2'] ? base_url('assets/uploads/players/'.$match['photo2']) : base_url('assets/img/player_avatar.png') ?>" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid <?= $match['winner_id'] == $match['player2_id'] ? 'var(--color-primary)' : 'rgba(255,255,255,0.1)' ?>; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <div style="position: relative; display: inline-block; margin-bottom: 25px; width: 160px; height: 110px;">
+                        <!-- Partner 2 Photo (Back) -->
+                        <?php if($match['partner2']): ?>
+                        <div style="position: absolute; left: 0; top: 5px; z-index: 1;">
+                             <img src="<?= $match['photo2p'] ? base_url('assets/uploads/players/'.$match['photo2p']) : base_url('assets/img/player_avatar.png') ?>" style="width: 95px; height: 95px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 10px 20px rgba(0,0,0,0.4);">
+                        </div>
+                        <?php endif; ?>
+
+                        <!-- Player 2 Photo (Front) -->
+                        <div style="position: absolute; right: 0; top: 0; z-index: 2;">
+                             <img src="<?= $match['photo2'] ? base_url('assets/uploads/players/'.$match['photo2']) : base_url('assets/img/player_avatar.png') ?>" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid <?= $match['winner_id'] == $match['player2_id'] ? 'var(--color-primary)' : 'white' ?>; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: var(--color-bg-light);">
+                        </div>
+
                         <?php if($match['winner_id'] == $match['player2_id']): ?>
-                            <div style="position: absolute; bottom: -5px; right: -5px; background: var(--color-primary); color: #000; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 3px solid #1a1a1a;">🏆</div>
+                            <div style="position: absolute; bottom: 5px; right: 65px; background: var(--color-primary); color: #000; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 3px solid #1a1a1a; z-index: 5;">🏆</div>
                         <?php endif; ?>
                     </div>
                     <h2 style="margin: 0; font-size: 24px; font-weight: 900; color: white;"><?= e($match['player2']) ?></h2>
