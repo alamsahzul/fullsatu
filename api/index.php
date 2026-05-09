@@ -21,9 +21,9 @@ require __DIR__ . '/../config/db.php';
 require __DIR__ . '/../includes/functions.php';
 
 // Parse the request
-$requestUri = $_SERVER['REQUEST_URI'];
-$basePath = '/fullsatu/api';
-$path = str_replace($basePath, '', parse_url($requestUri, PHP_URL_PATH));
+$scriptName = $_SERVER['SCRIPT_NAME'];
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$path = str_replace(dirname($scriptName), '', $requestUri);
 $path = trim($path, '/');
 $segments = $path ? explode('/', $path) : [];
 $method = $_SERVER['REQUEST_METHOD'];
