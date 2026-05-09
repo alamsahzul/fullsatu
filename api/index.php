@@ -21,9 +21,13 @@ require __DIR__ . '/../config/db.php';
 require __DIR__ . '/../includes/functions.php';
 
 // Parse the request
-$scriptName = $_SERVER['SCRIPT_NAME'];
-$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$path = str_replace(dirname($scriptName), '', $requestUri);
+$scriptName = $_SERVER['SCRIPT_NAME']; // e.g. /api/index.php or /fullsatu/api/index.php
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); // e.g. /api/seasons
+
+$baseDir = dirname($scriptName); // e.g. /api
+if ($baseDir === '/' || $baseDir === '\\') $baseDir = '';
+
+$path = substr($requestUri, strlen($baseDir));
 $path = trim($path, '/');
 $segments = $path ? explode('/', $path) : [];
 $method = $_SERVER['REQUEST_METHOD'];
