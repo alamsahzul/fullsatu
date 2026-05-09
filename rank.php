@@ -7,6 +7,7 @@ include 'includes/header.php';
 
 // Calculate Global Rankings
 // Points: Win +2, Loss -1
+// Using GROUP BY p.id to ensure uniqueness
 $stmt = $pdo->query("
     SELECT p.*,
         (SELECT COUNT(*) FROM matches m 
@@ -23,14 +24,17 @@ $stmt = $pdo->query("
                 (m.winner_id = m.player1_id AND (m.player2_id = p.id OR m.p2_partner_id = p.id)))
          AND m.status = 'completed') as losses
     FROM players p
+    GROUP BY p.id
     ORDER BY p.id ASC
 ");
-$players = $stmt->fetchAll();
+$rawPlayers = $stmt->fetchAll();
+$players = [];
 
-// Calculate points and win rate for each player
-foreach ($players as &$p) {
+// Calculate points and win rate without using references
+foreach ($rawPlayers as $p) {
     $p['points'] = ($p['wins'] * 2) - ($p['losses'] * 1);
     $p['win_rate'] = $p['total_matches'] > 0 ? round(($p['wins'] / $p['total_matches']) * 100) : 0;
+    $players[] = $p;
 }
 
 // Sort by points descending, then win rate, then wins
@@ -41,7 +45,7 @@ usort($players, function($a, $b) {
 });
 
 // Take top players for the leaderboard
-$topPlayers = array_slice($players, 0, 50); // Show top 50
+$topPlayers = array_slice($players, 0, 50); 
 ?>
 
 <div style="padding-top: 100px;"></div>
@@ -70,21 +74,23 @@ $topPlayers = array_slice($players, 0, 50); // Show top 50
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($topPlayers as $i => $p): 
-                        $isTop3 = ($i < 3);
+                    <?php 
+                    $pos = 1;
+                    foreach ($topPlayers as $p): 
+                        $isTop3 = ($pos <= 3);
                         $badgeColor = '#94a3b8';
-                        if ($i == 0) $badgeColor = '#fbbf24'; // Gold
-                        if ($i == 1) $badgeColor = '#e2e8f0'; // Silver
-                        if ($i == 2) $badgeColor = '#cd7f32'; // Bronze
+                        if ($pos == 1) $badgeColor = '#fbbf24'; // Gold
+                        if ($pos == 2) $badgeColor = '#e2e8f0'; // Silver
+                        if ($pos == 3) $badgeColor = '#cd7f32'; // Bronze
                     ?>
                         <tr style="border-bottom: 1px solid rgba(255,255,255,0.03); transition: all 0.3s;" class="rank-row">
                             <td style="padding: 20px; text-align: center;">
                                 <?php if($isTop3): ?>
                                     <div style="width: 35px; height: 35px; background: <?= $badgeColor ?>; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-weight: 900; font-size: 18px; box-shadow: 0 0 15px <?= $badgeColor ?>44;">
-                                        <?= $i + 1 ?>
+                                        <?= $pos ?>
                                     </div>
                                 <?php else: ?>
-                                    <span style="font-weight: 800; color: var(--color-text-muted); font-size: 16px;"><?= $i + 1 ?></span>
+                                    <span style="font-weight: 800; color: var(--color-text-muted); font-size: 16px;"><?= $pos ?></span>
                                 <?php endif; ?>
                             </td>
                             <td style="padding: 20px;">
@@ -95,8 +101,8 @@ $topPlayers = array_slice($players, 0, 50); // Show top 50
                                         <?php else: ?>
                                             <div style="width: 45px; height: 45px; border-radius: 50%; background: #2d3748; display: flex; align-items: center; justify-content: center; font-size: 20px; border: 2px solid rgba(255,255,255,0.1);">👤</div>
                                         <?php endif; ?>
-                                        <?php if($i == 0): ?>
-                                            <div style="position: absolute; -10px; left: 50%; transform: translateX(-50%); font-size: 14px;">👑</div>
+                                        <?php if($pos == 1): ?>
+                                            <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: 14px;">👑</div>
                                         <?php endif; ?>
                                     </div>
                                     <div>
@@ -123,7 +129,9 @@ $topPlayers = array_slice($players, 0, 50); // Show top 50
                                 <span style="font-size: 24px; font-weight: 900; color: <?= $p['points'] >= 0 ? 'white' : '#f87171' ?>;"><?= ($p['points'] > 0 ? '+' : '') . $p['points'] ?></span>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php 
+                    $pos++;
+                    endforeach; ?>
                     <?php if(empty($topPlayers)): ?>
                         <tr><td colspan="6" style="padding: 100px; text-align: center; color: var(--color-text-muted);">Belum ada data ranking tersedia.</td></tr>
                     <?php endif; ?>
