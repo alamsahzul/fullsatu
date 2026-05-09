@@ -175,7 +175,8 @@ try {
             $status = $_GET['status'] ?? null;
             
             $sql = "SELECT m.*, p1.name AS p1_name, p2.name AS p2_name, p1.photo AS p1_photo, p2.photo AS p2_photo,
-                    pa1.name AS p1_partner, pa2.name AS p2_partner
+                    pa1.name AS p1_partner, pa1.photo AS p1_partner_photo,
+                    pa2.name AS p2_partner, pa2.photo AS p2_partner_photo
                     FROM matches m
                     JOIN players p1 ON m.player1_id = p1.id
                     JOIN players p2 ON m.player2_id = p2.id
@@ -220,18 +221,29 @@ try {
             if (!$match) jsonResponse(['error' => 'Match not found'], 404);
             jsonResponse(['match' => $match]);
         }
-        // PUT /matches/{id}/score - Update score (admin)
-        elseif ($method === 'PUT' && count($segments) === 3 && $segments[2] === 'score') {
+        // POST /matches/{id}/score - Update score & doc (admin)
+        elseif ($method === 'POST' && count($segments) === 3 && $segments[2] === 'score') {
             requireAuth();
             $id = (int)$segments[1];
-            $body = getJsonBody();
-            $s1 = (int)($body['player1_score'] ?? 0);
-            $s2 = (int)($body['player2_score'] ?? 0);
             
-            if ($s1 === $s2) jsonResponse(['error' => 'Scores cannot be equal'], 400);
-            if (max($s1, $s2) < 11) jsonResponse(['error' => 'At least one player must reach 11'], 400);
+            $s1 = (int)($_POST['player1_score'] ?? 0);
+            $s2 = (int)($_POST['player2_score'] ?? 0);
+            $notes = $_POST['match_notes'] ?? '';
             
-            $winnerId = $s1 > $s2 ? 'player1_id' : 'player2_id';
+            if ($s1 === $s2 && ($s1 !== 0 || $s2 !== 0)) jsonResponse(['error' => 'Scores cannot be equal'], 400);
+            
+            // Handle Photo Upload
+            $photoName = null;
+            if (isset($_FILES['match_photo']) && $_FILES['match_photo']['error'] === UPLOAD_ERR_OK) {
+                $ext = strtolower(pathinfo($_FILES['match_photo']['name'], PATHINFO_EXTENSION));
+                $photoName = 'match_' . $id . '_' . time() . '.' . $ext;
+                $target = '../assets/uploads/matches/' . $photoName;
+                
+                if (!is_dir('../assets/uploads/matches/')) {
+                    mkdir('../assets/uploads/matches/', 0777, true);
+                }
+                move_uploaded_file($_FILES['match_photo']['tmp_name'], $target);
+            }
             
             // Get match to find winner_id
             $stmt = $pdo->prepare("SELECT * FROM matches WHERE id = ?");
@@ -239,12 +251,28 @@ try {
             $match = $stmt->fetch();
             if (!$match) jsonResponse(['error' => 'Match not found'], 404);
             
-            $actualWinner = $s1 > $s2 ? $match['player1_id'] : $match['player2_id'];
+            $winnerId = null;
+            $status = 'pending';
+            if ($s1 > 0 || $s2 > 0) {
+                $status = 'completed';
+                $winnerId = $s1 > $s2 ? $match['player1_id'] : $match['player2_id'];
+            }
             
-            $stmt = $pdo->prepare("UPDATE matches SET player1_score = ?, player2_score = ?, winner_id = ?, status = 'completed' WHERE id = ?");
-            $stmt->execute([$s1, $s2, $actualWinner, $id]);
+            $sql = "UPDATE matches SET player1_score = ?, player2_score = ?, winner_id = ?, match_notes = ?, status = ?";
+            $params = [$s1, $s2, $winnerId, $notes, $status];
             
-            jsonResponse(['success' => true, 'winner_id' => $actualWinner]);
+            if ($photoName) {
+                $sql .= ", match_photo = ?";
+                $params[] = $photoName;
+            }
+            
+            $sql .= " WHERE id = ?";
+            $params[] = $id;
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            
+            jsonResponse(['success' => true]);
         }
     }
 
@@ -279,13 +307,21 @@ try {
     // --- HOME (Public Dashboard) ---
     elseif (isset($segments[0]) && $segments[0] === 'home') {
         if ($method === 'GET') {
+            $season = getCurrentLigaSeason($pdo);
+            $top5 = [];
+            
+            if ($season) {
+                $standings = calculateStandings($pdo, $season['id']);
+                $top5 = array_slice($standings, 0, 5);
+            }
+
             // Stats
             $totalPlayers = $pdo->query("SELECT COUNT(*) FROM players")->fetchColumn();
             $totalMatches = $pdo->query("SELECT COUNT(*) FROM matches WHERE status='completed'")->fetchColumn();
             $totalSeasons = $pdo->query("SELECT COUNT(*) FROM seasons")->fetchColumn();
             
-            // Latest Result
-            $stmt = $pdo->query("SELECT m.*, p1.name as p1_name, p2.name as p2_name, s.name as season_name 
+            // Latest Result (overall latest)
+            $stmt = $pdo->query("SELECT m.*, p1.name as p1_name, p2.name as p2_name, p1.photo as p1_photo, p2.photo as p2_photo, s.name as season_name 
                                 FROM matches m 
                                 JOIN players p1 ON m.player1_id = p1.id 
                                 JOIN players p2 ON m.player2_id = p2.id 
@@ -294,8 +330,8 @@ try {
                                 ORDER BY m.id DESC LIMIT 1");
             $latestMatch = $stmt->fetch();
 
-            // Next Match
-            $stmt = $pdo->query("SELECT m.*, p1.name as p1_name, p2.name as p2_name, s.name as season_name 
+            // Next Match (overall next)
+            $stmt = $pdo->query("SELECT m.*, p1.name as p1_name, p2.name as p2_name, p1.photo as p1_photo, p2.photo as p2_photo, s.name as season_name 
                                 FROM matches m 
                                 JOIN players p1 ON m.player1_id = p1.id 
                                 JOIN players p2 ON m.player2_id = p2.id 
@@ -305,6 +341,8 @@ try {
             $nextMatch = $stmt->fetch();
 
             jsonResponse([
+                'season' => $season,
+                'top5' => $top5,
                 'stats' => [
                     'players' => (int)$totalPlayers,
                     'matches' => (int)$totalMatches,
