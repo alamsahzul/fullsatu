@@ -117,16 +117,21 @@ function calculateStandings($pdo, $seasonId, $limitParticipantIds = null) {
         $table[$sp2_id]['pf'] += $s2;
         $table[$sp2_id]['pa'] += $s1;
 
+        // Different point calculations based on season format
+        $isLeague = ($season['format'] === 'league');
+        $winPoints = $isLeague ? 1 : 2;
+        $lossPoints = $isLeague ? 0 : -1;
+
         if ($m['winner_id'] == $m['player1_id']) {
             $table[$sp1_id]['w']++;
-            $table[$sp1_id]['pts'] += 2; // Win +2
+            $table[$sp1_id]['pts'] += $winPoints;
             $table[$sp2_id]['l']++;
-            $table[$sp2_id]['pts'] -= 1; // Loss -1
+            $table[$sp2_id]['pts'] += $lossPoints;
         } else {
             $table[$sp2_id]['w']++;
-            $table[$sp2_id]['pts'] += 2; // Win +2
+            $table[$sp2_id]['pts'] += $winPoints;
             $table[$sp1_id]['l']++;
-            $table[$sp1_id]['pts'] -= 1; // Loss -1
+            $table[$sp1_id]['pts'] += $lossPoints;
         }
     }
 
